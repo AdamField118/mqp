@@ -1,18 +1,109 @@
 \documentclass[12pt]{article}
 
-\usepackage[margin=1in]{geometry}
+\usepackage[top=1.25in, bottom=1.25in, left=1.25in, right=1.25in]{geometry}
 \usepackage{amsmath,amsthm,amssymb}
-\usepackage{mathtools}
+\usepackage{xcolor}
+\usepackage{cancel}
 \usepackage{graphicx}
-\usepackage{siunitx}
-\usepackage{physics}
-\graphicspath{ {./} }
+\usepackage{chngcntr}
+\usepackage{setspace}
+\usepackage{parskip}
+\usepackage{indentfirst}
+\usepackage{titlesec}
+\usepackage{hyperref}
 
 \usepackage[backend=biber,style=numeric-comp]{biblatex}
 \addbibresource{MQP.bib}
 
-\begin{document}
-The \cite{saha_lensing_2026}
+\hypersetup{
+  colorlinks  = true,
+  linkcolor   = black,
+  citecolor   = black,
+  urlcolor    = blue,
+  pdfborder   = {0 0 0},
+}
 
-\printbibliography
+\setlength{\parindent}{0.5in}
+\setlength{\parskip}{0pt}
+
+\titleformat{\section}
+  {\normalfont\large\bfseries}{\thesection}{1em}{}
+\titleformat{\subsection}
+  {\normalfont\normalsize\bfseries}{\thesubsection}{1em}{}
+\titleformat{\subsubsection}
+  {\normalfont\normalsize\itshape}{\thesubsubsection}{1em}{}
+
+\begin{document}
+
+\begin{titlepage}
+  \thispagestyle{empty}
+  \begin{center}
+    \vspace*{0.5in}
+
+    {\Large\bfseries \emph{Temporary Title}}
+
+    \vspace{0.75in}
+
+    {\Large By:\\[0.5em]
+    Adam Field${}^{1}$}\\[0.25em]
+    \vspace{0.75in}
+    {\Large Project Advisors:\\[0.5em]
+    William Sanguinet${}^{2}$\\[0.25em]
+    Sayan Saha${}^{3}$}
+    \vspace{0.75in}
+
+    ${}^{1}$ Worcester Polytechnic Institute\\[0.1em]
+    Department of Physics\\[0.75em]
+    ${}^{2}$ Worcester Polytechnic Institute\\[0.1em]
+    Department of Mathematics\\[0.75em]
+    ${}^{3}$ Northeastern University\\[0.1em]
+    Department of Physics
+
+
+    \vspace{0.75in}
+
+    {\Large Date: \today}
+
+    \vfill
+
+    \begin{minipage}{0.85\textwidth}
+      \centering\small\itshape
+      This report represents work of WPI undergraduate students submitted to the faculty as evidence of a degree requirement. WPI routinely publishes these reports on its website without editorial or peer review. For more information about the projects program at WPI, see \href{http://www.wpi.edu/Academics/Projects}{http://www.wpi.edu/Academics/Projects}.
+    \end{minipage}
+  \end{center}
+\end{titlepage}
+
+\pagenumbering{roman}
+\setcounter{page}{1}
+
+\clearpage
+\section*{Abstract}
+\doublespacing
+\noindent
+Filler
+\singlespacing
+
+\clearpage
+\section*{Acknowledgements}
+\doublespacing
+\noindent
+Filler
+
+\singlespacing
+
+\clearpage
+\tableofcontents
+
+\clearpage
+\listoffigures
+
+\clearpage
+\pagenumbering{arabic}
+\setcounter{page}{1}
+\doublespacing
+
+\section{Introduction}
+\noindent
+Filler
+
 \end{document}
