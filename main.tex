@@ -106,4 +106,308 @@ Filler
 \noindent
 Filler
 
+\section{Background}
+\label{sec:background}
+\noindent
+A mass distribution deflects light, the telescope records a blurred and noisy image, and a shape estimator reduces that image to measured quantities. A convergence map connects these quantities back to the projected mass through a calibrated statistical estimate of the lensing distortion~\cite{bartelmann_weak_2001,mandelbaum_weak_2018}.
+
+\subsection{Weak gravitational lensing}
+\label{sec:lensing}
+
+\subsubsection{The lens mapping}
+
+For a galaxy cluster, the thin-lens approximation places the deflecting mass on a plane perpendicular to the line of sight. This is appropriate when the cluster's depth is small compared with the observer--lens and lens--source distances. Let $\boldsymbol{\theta}$ be the angular position of an observed image and $\boldsymbol{\beta}$ the position its source would have without the lens. In terms of the dimensionless projected lensing potential $\psi$, the lens equation is~\cite{bartelmann_weak_2001}
+\begin{equation}
+    \boldsymbol{\beta}=\boldsymbol{\theta}-\boldsymbol{\nabla}_{\theta}\psi(\boldsymbol{\theta}).
+    \label{eq:lens-equation}
+\end{equation}
+For a fixed source redshift, this potential obeys
+\begin{equation}
+    \nabla_{\theta}^{2}\psi=2\kappa,
+    \qquad
+    \kappa(\boldsymbol{\theta})=\frac{\Sigma(D_l\boldsymbol{\theta})}{\Sigma_{\mathrm{crit}}},
+    \qquad
+    \Sigma_{\mathrm{crit}}=\frac{c^2}{4\pi G}\frac{D_s}{D_lD_{ls}}.
+    \label{eq:convergence}
+\end{equation}
+Here $\Sigma$ is the projected mass per unit physical area, while $D_l$, $D_s$, and $D_{ls}$ are angular-diameter distances from observer to lens, observer to source, and lens to source. An angular-diameter distance converts an observed angular extent into a transverse physical size. The source must lie behind the lens. The convergence $\kappa$ therefore depends on both the mass distribution and the source distance; it is not a surface density in physical units~\cite{bartelmann_weak_2001}.
+
+Across a sufficiently small galaxy image, the lens mapping can be linearized. Its Jacobian separates into an isotropic part and a traceless distortion:
+\begin{equation}
+    A_{ij}=\frac{\partial\beta_i}{\partial\theta_j}
+    =\begin{pmatrix}
+        1-\kappa-\gamma_1 & -\gamma_2\\
+        -\gamma_2 & 1-\kappa+\gamma_1
+    \end{pmatrix},
+    \label{eq:jacobian}
+\end{equation}
+where
+\begin{equation}
+    \kappa=\frac{\psi_{,11}+\psi_{,22}}{2},
+    \qquad
+    \gamma_1=\frac{\psi_{,11}-\psi_{,22}}{2},
+    \qquad
+    \gamma_2=\psi_{,12}.
+    \label{eq:potential-derivatives}
+\end{equation}
+Commas denote derivatives with respect to angular coordinates. Convergence changes the isotropic scale of the image, while the two shear components describe stretching along different axes. Lensing conserves surface brightness; the magnification $\mu=1/|\det A|$ changes the apparent area and hence the total flux~\cite{bartelmann_weak_2001,schneider_weak_2006}.
+
+Galaxy shapes constrain the \emph{reduced shear},
+\begin{equation}
+    g=g_1+ig_2=\frac{\gamma_1+i\gamma_2}{1-\kappa},
+    \label{eq:reduced-shear}
+\end{equation}
+rather than $\gamma$ alone. In the weak limit, $|\kappa|,|\gamma|\ll1$, one may use $g\simeq\gamma$. This approximation needs particular care near cluster cores, where a field can contain strong-lensing features even when the surrounding region is suitable for weak-lensing analysis~\cite{schneider_weak_2006}.
+
+\subsubsection{Ellipticity and shape noise}
+
+For an ideal image with elliptical isophotes (contours of equal surface brightness), define the complex ellipticity by
+\begin{equation}
+    \epsilon=\epsilon_1+i\epsilon_2
+    =\frac{a-b}{a+b}\exp(2i\varphi),
+    \label{eq:ellipticity}
+\end{equation}
+where $a$ and $b$ are the major and minor semiaxes and $\varphi$ is the major-axis angle. The factor of two expresses a physical symmetry: rotating an ellipse by $180^\circ$ leaves its shape unchanged. Ellipticity and shear are consequently called spin-2 quantities. For an active rotation of the image through an angle $\alpha$ in fixed coordinates, $\epsilon$ transforms as $\epsilon\exp(2i\alpha)$~\cite{schneider_weak_2006}.
+
+Several shape conventions appear in lensing software. In particular, the distortion $\chi=[(a^2-b^2)/(a^2+b^2)]\exp(2i\varphi)$ satisfies $\chi=2\epsilon/(1+|\epsilon|^2)$ and has a different shear response. The convention must therefore be specified before comparing outputs from different estimators. Here $\epsilon$ denotes the ideal pre-PSF ellipticity in Eq.~\eqref{eq:ellipticity}, and $\boldsymbol{e}$ will denote a measured two-component shape statistic that still requires calibration~\cite{schneider_weak_2006}.
+
+If $\epsilon^{\mathrm{s}}$ is the unlensed ellipticity, the ideal transformation for $|g|<1$ is
+\begin{equation}
+    \epsilon=\frac{\epsilon^{\mathrm{s}}+g}{1+g^*\epsilon^{\mathrm{s}}},
+    \label{eq:ellipticity-transform}
+\end{equation}
+with $g^*$ the complex conjugate. Averaging over an isotropic distribution of intrinsic orientations gives $\langle\epsilon\rangle=g$. The intrinsic ellipticity of any particular galaxy is unknown, however, so its observed elongation cannot be assigned entirely to the lens. The resulting scatter is \emph{shape noise}. For $N$ independent galaxies sharing approximately the same shear, an ideal unweighted mean has per-component uncertainty $\sigma_{\epsilon,i}/\sqrt{N}$. Measurement noise, selection, and intrinsic alignments (correlations in unlensed galaxy orientations) complicate this ideal result~\cite{schneider_weak_2006,mandelbaum_weak_2018}.
+
+\subsection{From lensed light to SuperBIT images}
+\label{sec:images}
+
+SuperBIT observed 30 galaxy clusters during its 2023 science flight, operating at an altitude of approximately $33\,\mathrm{km}$. Its observations exploit the low blue-wavelength sky background and high angular resolution available in the stratosphere. LITB~I established the advantage of blue-band lensing observations for this environment. LITB~III subsequently used the flight images to construct shape catalogs, with source detection in F480W ($b$) and complementary photometry in F400W ($u$) and F600W ($g$)~\cite{shaaban_weak_2022,saha_lensing_2026-1}.
+
+The telescope does not record the ideal lensed surface brightness $I_{\mathrm{L}}$. Locally, a useful image model is
+\begin{equation}
+    d_p=\int_{\Omega_p}\!d^2\theta\,
+    [P*I_{\mathrm{L}}](\boldsymbol{\theta})+n_p,
+    \label{eq:image-model}
+\end{equation}
+where $d_p$ is the background-subtracted signal in pixel $p$, $\Omega_p$ is that pixel's angular footprint, $P$ is the normalized point-spread function (PSF), and $n_p$ contains noise and residual background error. The convolution assumes the PSF is approximately constant across the individual galaxy. Across the field, or between exposures, it generally changes. If a supplied PSF model already includes the pixel response, that response must not be applied a second time~\cite{rowe_galsim_2015,mandelbaum_weak_2018}.
+
+The PSF is the image the instrument would form of an unresolved point source. Its width obscures small-scale galaxy structure; its anisotropy can also imitate a coherent galaxy elongation. Stars provide samples of the PSF at discrete positions. A spatial model interpolates between them to predict the PSF at each galaxy, and stars withheld from fitting can test those predictions. A small mean residual alone is insufficient: errors correlated across the field can contaminate the spatially coherent lensing signal~\cite{rowe_improving_2010}.
+
+Image processing also affects the inference. A coadd combines aligned exposures, increasing depth but mixing their PSFs and noise properties. Interpolation can correlate neighboring pixel errors. Blending occurs when light from neighboring sources overlaps; assigning those pixels to separate objects is the deblending problem. LITB~III uses coadds for detection and photometry while retaining individual-exposure information for shape fitting. A network applied to a coadd or an individual exposure must receive a PSF and noise description appropriate to that image~\cite{saha_lensing_2026-1,rowe_galsim_2015}.
+
+\subsection{Estimating and calibrating shear}
+\label{sec:calibration}
+
+\subsubsection{Shape measurements and their response}
+
+One way to measure a galaxy is to fit a parameterized light profile after convolving it with the PSF. For Gaussian pixel noise with a known, parameter-independent covariance $C$, the image likelihood has the form
+\begin{equation}
+    -2\ln\mathcal{L}(\boldsymbol{q})=
+    [\boldsymbol{d}-\boldsymbol{m}(\boldsymbol{q})]^{\mathsf T}
+    C^{-1}[\boldsymbol{d}-\boldsymbol{m}(\boldsymbol{q})]+\mathrm{constant},
+    \label{eq:likelihood}
+\end{equation}
+where $\boldsymbol{q}$ contains parameters such as position, flux, size, and ellipticity, and $\boldsymbol{m}$ is the predicted pixel vector. Priors can supply additional information in a Bayesian treatment. The \texttt{ngmix} package provides model-fitting tools used by the SuperBIT analysis. A fitted shape need not be an unbiased shear estimator: an imperfect profile family and the nonlinear effect of pixel noise can both change its expectation~\cite{sheldon_implementation_2014,refregier_noise_2012}.
+
+Calibration measures how a statistic responds to lensing. For a small artificial shear $\boldsymbol{h}$, expand the measured shape as
+\begin{equation}
+    e_i(\boldsymbol{h})=e_i(\boldsymbol{0})
+    +\sum_{j=1}^{2}R_{ij}h_j+O(|\boldsymbol{h}|^2),
+    \qquad
+    R_{ij}=\left.\frac{\partial e_i}{\partial h_j}\right|_{\boldsymbol{h}=0}.
+    \label{eq:response}
+\end{equation}
+The diagonal terms describe sensitivity to each shear component; the off-diagonal terms describe mixing between them. Even an accurate individual shape measurement need not have the identity matrix as its response. Equation~\eqref{eq:ellipticity-transform}, for example, has a response that depends on the intrinsic shape. Calibration concerns the ensemble used for the science measurement~\cite{schneider_weak_2006,sheldon_practical_2017}.
+
+Metacalibration estimates this response by modifying the observed images. It removes an estimated PSF, applies small positive and negative shears, and reconvolves with a suitable kernel to suppress modes that deconvolution would make unstable. The shape estimator is then run again:
+\begin{equation}
+    R_{ij}\simeq
+    \frac{e_i(+\Delta h\,\boldsymbol{u}_j)-e_i(-\Delta h\,\boldsymbol{u}_j)}{2\Delta h},
+    \label{eq:metacal}
+\end{equation}
+where $\boldsymbol{u}_j$ is the unit vector in shear direction $j$. Shearing a blurred image without treating its PSF would shear the instrument's imprint as well as the galaxy. Image manipulation also produces correlated noise, whose contribution to the response must be controlled~\cite{huff_metacalibration_2017,sheldon_practical_2017}.
+
+\subsubsection{Selection, weights, and residual bias}
+
+The response of a catalog includes more than the response of the galaxies already in it. A small shear can move an object across a detection threshold or a cut on signal-to-noise ratio or size. If inclusion depends on orientation, an initially isotropic population can acquire a nonzero mean shape. A selection response measures this effect by averaging shapes from images with no artificial shear, while determining membership from the positively and negatively sheared versions. With equal weights, its components are~\cite{sheldon_practical_2017}
+\begin{equation}
+    R^{\mathrm{sel}}_{ij}\simeq
+    \frac{\langle e_i(0)\rangle_{S_j^+}-\langle e_i(0)\rangle_{S_j^-}}{2\Delta h}.
+    \label{eq:selection-response}
+\end{equation}
+The corresponding total response is $\langle R\rangle+R^{\mathrm{sel}}$. Weights that depend on measured quantities also affect the response. More generally, the object to differentiate is the complete selected, weighted mean,
+\begin{equation}
+    \overline{\boldsymbol{e}}(\boldsymbol{h})=
+    \frac{\sum_a S_a(\boldsymbol{h})w_a(\boldsymbol{h})\boldsymbol{e}_a(\boldsymbol{h})}
+    {\sum_a S_a(\boldsymbol{h})w_a(\boldsymbol{h})},
+    \qquad
+    R_{\mathrm{tot}}=\left.\frac{\partial\overline{\boldsymbol{e}}}{\partial\boldsymbol{h}}\right|_0.
+    \label{eq:weighted-response}
+\end{equation}
+Here $S_a$ indicates inclusion and $w_a$ is the weight of object $a$. For hard cuts, this derivative is understood statistically through perturbed sample averages. Under a locally constant weak shear and a controlled mean additive offset $\boldsymbol{c}_e$, the calibrated estimate is
+\begin{equation}
+    \widehat{\boldsymbol{g}}\simeq
+    R_{\mathrm{tot}}^{-1}(\overline{\boldsymbol{e}}-\boldsymbol{c}_e).
+    \label{eq:calibrated-shear}
+\end{equation}
+The same selections and weight definitions must enter the calibration and the final measurement. Reselecting an existing catalog does not capture objects whose detection or deblending changes under shear; those effects require a treatment that includes the detection process, or validation through simulations of the full measurement procedure~\cite{sheldon_practical_2017}.
+
+Independent simulations with known input shear test the remaining error. A component-wise summary, when cross-component terms are negligible or tested separately, is
+\begin{equation}
+    \langle\widehat g_i\rangle-g_i^{\mathrm{true}}
+    =m_i g_i^{\mathrm{true}}+c_i.
+    \label{eq:shear-bias}
+\end{equation}
+The multiplicative bias $m_i$ rescales the signal, while the additive bias $c_i$ shifts it. These are residual biases of the calibrated estimator, not the raw response in Eq.~\eqref{eq:response}. Noise can produce a bias as well as scatter, so increasing the sample size does not remove every measurement error~\cite{refregier_noise_2012,mandelbaum_weak_2018}.
+
+PSF leakage is a related diagnostic. One can test whether mean measured galaxy shapes vary with PSF ellipticity, and whether PSF-model residuals correlate across angular separations. Such correlations reveal different failure modes: a shape estimator may retain the imprint of a known anisotropic PSF, or an incorrect PSF model may supply the wrong correction. A flat trend in one diagnostic does not establish that all other biases vanish~\cite{rowe_improving_2010,saha_lensing_2026-1}.
+
+\subsection{Neural networks for image regression}
+\label{sec:learning}
+
+\subsubsection{Learning a function from examples}
+
+Supervised learning constructs a function from examples with known targets. In image regression, an input $\boldsymbol{x}$ contains pixel values and any additional information supplied to the model; the target $\boldsymbol{y}$ contains continuous quantities such as shape or flux. A neural network writes the prediction as $f_{\boldsymbol{w}}(\boldsymbol{x})$, with adjustable parameters $\boldsymbol{w}$. A typical layer forms
+\begin{equation}
+    \boldsymbol{z}^{(\ell+1)}=
+    \phi\!\left(W^{(\ell)}\boldsymbol{z}^{(\ell)}+\boldsymbol{b}^{(\ell)}\right),
+    \label{eq:network-layer}
+\end{equation}
+Here $W^{(\ell)}$ contains learned weights, $\boldsymbol{b}^{(\ell)}$ contains learned offsets, and $\boldsymbol{z}^{(\ell)}$ is an intermediate numerical representation, or feature vector. The activation $\phi$ applies a nonlinear function to its components. Without nonlinearities, a sequence of affine layers would collapse to a single affine map. The term \emph{deep} refers to composing multiple learned layers~\cite{goodfellow_deep_2016}.
+
+Training chooses the parameters by minimizing a loss. For $N$ examples and $K$ outputs, a weighted mean-squared error is
+\begin{equation}
+    L(\boldsymbol{w})=\frac{1}{NK}\sum_{a=1}^{N}\sum_{k=1}^{K}
+    \lambda_k\left[f_{\boldsymbol{w}}(\boldsymbol{x}_a)_k-y_{a,k}\right]^2,
+    \label{eq:mse}
+\end{equation}
+with output weights $\lambda_k$. Parameters are updated using gradients evaluated on smaller subsets, or mini-batches, rather than the whole training set at every step. AdamW, used in ShearNet's training code, scales updates using running gradient statistics and applies weight decay separately from the loss-gradient update. Weight decay gradually shrinks parameters to discourage excessively large weights. A trained model performs \emph{inference} by evaluating the resulting function on new inputs~\cite{goodfellow_deep_2016,loshchilov_decoupled_2019,field_shearnet_2026}.
+
+Training error is not an independent performance measurement. A validation set supports choices such as when to stop training; a test set evaluates the chosen model afterward. These roles matter in simulations: rotated copies or new noise realizations of a galaxy still share underlying structure. Keeping related realizations together when splitting data avoids treating nearly repeated examples as independent evidence of generalization~\cite{goodfellow_deep_2016,tewes_weak-lensing_2019}.
+
+\subsubsection{Convolution and attention}
+
+A fully connected layer assigns separate weights to every input--output connection. A convolutional neural network (CNN) instead reuses a small filter over the image. In the usual machine-learning convention, a two-dimensional convolutional layer computes
+\begin{equation}
+    z'_{u,v,o}=\phi\!\left(b_o+
+    \sum_{r,s,c}K_{r,s,c,o}\,z_{u+r,v+s,c}\right).
+    \label{eq:convolution}
+\end{equation}
+The indices $u,v$ locate a pixel, $r,s$ locate an offset within the filter, and $c,o$ label input and output feature channels. These channels are learned arrays, not necessarily photometric bands. Reusing $K$ lets the same local pattern be recognized at different locations, while successive layers combine information over larger regions. This learned filtering operation is distinct from convolution with the physical PSF~\cite{goodfellow_deep_2016}.
+
+Residual connections provide another way to organize deep networks. A block of the form $\boldsymbol{z}'=\boldsymbol{z}+F(\boldsymbol{z})$ learns a change to its input, retaining a direct path through the block. This helps optimize deeper models without requiring every layer to relearn a useful representation from scratch~\cite{he_deep_2016}.
+
+Attention combines features using weights that depend on the current input. Given arrays of query, key, and value vectors, denoted $Q$, $K$, and $V$, scaled dot-product attention is
+\begin{equation}
+    \operatorname{Attention}(Q,K,V)=
+    \operatorname{softmax}\!\left(\frac{QK^{\mathsf T}}{\sqrt{d_k}}\right)V.
+    \label{eq:attention}
+\end{equation}
+Here $d_k$ is the query/key dimension and the row-wise softmax converts scores $s_j$ into normalized weights $\exp(s_j)/\sum_l\exp(s_l)$. A query selects a weighted combination of values according to its similarity to the keys. In cross-attention, the queries and keys/values come from different inputs. ShearNet uses this construction to combine galaxy and PSF features. Multiple attention heads learn several such combinations; they are internal computations, not separate physical measurements~\cite{vaswani_attention_2017,field_shearnet_2026}.
+
+\subsubsection{Automatic differentiation}
+
+Training requires derivatives through all these operations. Automatic differentiation evaluates the chain rule through a numerical program, propagating derivatives forward or backward. Backpropagation uses reverse mode to obtain a scalar loss's gradient with respect to many network parameters. It does not require finite-difference perturbations of each parameter~\cite{baydin_automatic_2018}.
+
+The same machinery can differentiate with respect to physical inputs. If a simulator produces an image $\boldsymbol{x}(\boldsymbol{h})$ under an applied shear, then, at fixed network parameters,
+\begin{equation}
+    \frac{\partial f_i}{\partial h_j}
+    =\sum_p\frac{\partial f_i}{\partial x_p}
+              \frac{\partial x_p}{\partial h_j}.
+    \label{eq:differentiable-response}
+\end{equation}
+A Jacobian--vector product evaluates the network derivative along the image perturbation caused by that shear without storing the full pixel Jacobian. Differentiable image rendering thus permits a response calculation through both simulator and estimator. The derivative is accurate for the implemented model; it does not establish that the model describes an observed galaxy or that catalog selection has been calibrated~\cite{baydin_automatic_2018,field_shearnet_2026}.
+
+\subsection{ShearNet as a shape estimator}
+\label{sec:shearnet}
+
+ShearNet learns galaxy properties from simulated images and evaluates them alongside \texttt{ngmix}. ShearNet supports separate galaxy and PSF inputs, including a two-branch architecture in which each image is first processed into its own features. Providing the PSF explicitly allows the prediction to depend on the local observing conditions. Forklens supplies a related precedent for this architecture, using galaxy and PSF branches for learned shape measurement~\cite{field_shearnet_2026,zhang_forklens_2024}.
+
+The names of output variables need care. In ShearNet's simulator, labels called \texttt{g1} and \texttt{g2} describe the pre-PSF shape of the rendered galaxy, including the composition of its intrinsic shape with any applied shear. They are not a known cluster shear assigned independently to each real galaxy. Auxiliary targets can include total flux and half-light radius, the radius enclosing half the model's flux. Inferring the lensing field still requires an ensemble and its response~\cite{field_shearnet_2026}.
+
+The spin-2 transformation gives the network a useful constraint. For a transformation $T$ of both galaxy and PSF images, an equivariant shape estimator obeys
+\begin{equation}
+    f(T\boldsymbol{x}_{\mathrm{gal}},T\boldsymbol{x}_{\mathrm{PSF}})
+    =\rho_2(T)f(\boldsymbol{x}_{\mathrm{gal}},\boldsymbol{x}_{\mathrm{PSF}}),
+    \label{eq:equivariance}
+\end{equation}
+where $\rho_2(T)$ is the corresponding action on the two shape components. Equivariance means that the output changes in the prescribed way, whereas invariance means that it does not change. A flux prediction should be invariant to a rotation; an ellipticity prediction generally should not~\cite{cohen_group_2016,lin_d_4cnntimesanacal_2026}.
+
+The square-pixel group $D_4$ contains the four right-angle rotations and their reflections. These transformations can be applied without interpolating the pixels. ShearNet's $D_4$ model evaluates shared features over this set and combines them with the appropriate spin-2 signs. This imposes the discrete symmetry, but does not enforce arbitrary-angle rotation symmetry or correct shear calibration. In particular, rotating the galaxy and PSF together is different from changing only the PSF while holding the galaxy fixed. The latter probes sensitivity to an observing condition~\cite{cohen_group_2016,lin_d_4cnntimesanacal_2026,field_shearnet_2026}.
+
+The differentiable renderer also makes it possible to penalize an incorrect shear response or unwanted sensitivity to PSF changes during training. For an ellipticity target, the appropriate individual shear response follows from Eq.~\eqref{eq:ellipticity-transform}; setting every galaxy's response to the identity would impose a different condition. Lin et al. combine differentiable shape measurement with analytical calibration, illustrating why learned measurements and explicit response control belong together. Such constraints supplement the prediction loss. They do not remove the need to test the selected ensemble on independent images~\cite{lin_d_4cnntimesanacal_2026,field_shearnet_2026}.
+
+\subsection{From simulations to observations}
+\label{sec:transfer}
+
+A simulator provides quantities that are unavailable for a real image: the unlensed profile, the applied shear, and the noise-free signal. GalSim implements profile transformations, PSF convolution, pixel rendering, and noise models for this purpose. These operations permit controlled tests in which one source of difficulty is changed at a time. They also define the population on which a learned estimator is trained~\cite{rowe_galsim_2015}.
+
+For squared-error regression, the ideal unrestricted predictor is the conditional mean of the target under the training distribution. A simple example shows why small prediction error does not guarantee correct response. Suppose $x=y+n$, with independent, zero-mean Gaussian variables of variances $\sigma_y^2$ and $\sigma_n^2$. Then
+\begin{equation}
+    \mathbb{E}[y\mid x]=
+    \frac{\sigma_y^2}{\sigma_y^2+\sigma_n^2}\,x.
+    \label{eq:shrinkage}
+\end{equation}
+The optimal prediction shrinks uncertain measurements toward zero. Its response to a coherent shift of $x$ is smaller than one, despite being optimal for the training loss. This illustrative calculation is not a model of the full ShearNet pipeline; it explains why prediction error and shear calibration answer different questions. Tewes et al. address this distinction by constructing learning objectives around averages over noisy realizations~\cite{goodfellow_deep_2016,tewes_weak-lensing_2019}.
+
+\emph{Distribution shift} occurs when the observations differ from the examples used for training. For this application, relevant differences include galaxy morphology, neighboring light, PSF structure, centering, masking, and noise correlations. Matching a one-dimensional flux distribution cannot establish that their joint distribution is representative. A model can therefore perform well on held-out simulations generated by the same assumptions and still fail on flight data~\cite{mandelbaum_weak_2018,tewes_weak-lensing_2019}.
+
+The project must consequently connect simulation tests to observable diagnostics. Known-shear simulations test $m$ and $c$; real images permit tests of PSF residuals, mean-shape trends, and spatial consistency. Comparing estimators on matched objects helps separate a change in measurement from a change in the selected population. Neither agreement with a reference estimator nor a visually convincing mass peak supplies the missing truth labels. The distinction between these tests will remain necessary when ShearNet is applied to the real SuperBIT data~\cite{saha_lensing_2026-1,mandelbaum_weak_2018}.
+
+\subsection{Background sources and convergence maps}
+\label{sec:maps}
+
+\subsubsection{Which galaxies carry the cluster signal?}
+
+A well-measured shape is useful for cluster lensing only if the galaxy lies behind the cluster. Foreground and cluster-member galaxies do not carry the same cluster-lensing signal. Under the idealized assumption that contaminants have zero mean shape, a fraction $f$ of such objects in an otherwise uniformly weighted sample reduces the mean signal by a factor $1-f$. Spatially varying contamination can then alter the inferred map morphology as well as its amplitude~\cite{schneider_weak_2006,mandelbaum_weak_2018}.
+
+A photometric color is a difference of magnitudes in two bands, and therefore measures a flux ratio. Colors contain information about a galaxy's spectrum and redshift, although different spectra can produce similar colors. LITB~IV uses the $(u-b,b-g)$ color plane to select background candidates, calibrating the selection with external redshifts. This is separate from selecting objects with reliable shapes. The retained sources also span a redshift distribution, so converting a convergence map into physical surface density requires the corresponding lensing-efficiency distribution, through $D_{ls}/D_s$ in Eq.~\eqref{eq:convergence}~\cite{saha_lensing_2026,schneider_weak_2006}.
+
+\subsubsection{Kaiser--Squires reconstruction}
+
+The common potential in Eq.~\eqref{eq:potential-derivatives} connects the shear field to convergence. On a small, approximately planar sky patch, choose a Fourier convention for which $\partial_j$ becomes $ik_j$. For $\boldsymbol{k}\ne0$,
+\begin{align}
+    \widetilde\kappa&=-\tfrac12(k_1^2+k_2^2)\widetilde\psi, &
+    \widetilde\gamma_1&=-\tfrac12(k_1^2-k_2^2)\widetilde\psi, &
+    \widetilde\gamma_2&=-k_1k_2\widetilde\psi.
+    \label{eq:fourier-potential}
+\end{align}
+Eliminating $\widetilde\psi$ gives the Kaiser--Squires relation
+\begin{equation}
+    \widetilde\kappa_E+i\widetilde\kappa_B
+    =D^*(\boldsymbol{k})(\widetilde\gamma_1+i\widetilde\gamma_2),
+    \qquad
+    D(\boldsymbol{k})=\frac{k_1^2-k_2^2+2ik_1k_2}{k_1^2+k_2^2}.
+    \label{eq:kaiser-squires}
+\end{equation}
+For an ideal shear field derived from a scalar lensing potential, $\kappa_E=\kappa$ and $\kappa_B=0$. The E/B notation describes the two components of this field decomposition; it does not refer to electromagnetic fields. In observations, the input is a spatial estimate from calibrated galaxy shapes, with $g\simeq\gamma$ assumed if the linear inversion is used directly~\cite{kaiser_mapping_1993,schneider_weak_2006}.
+
+The zero Fourier mode is unconstrained: shear alone does not fix the mean convergence of the patch. More generally, for a single source plane, the transformation
+\begin{equation}
+    \kappa'=\lambda\kappa+(1-\lambda),\qquad
+    \gamma'=\lambda\gamma
+    \label{eq:mass-sheet}
+\end{equation}
+leaves the reduced shear unchanged. This is the mass-sheet degeneracy. Assigning a value to the mean map is a boundary or normalization choice, not an independent measurement of the missing mass sheet. Finite fields, masks, and nonuniform sampling introduce further complications because the ideal Fourier relation assumes access to the continuous field~\cite{schneider_weak_2006}.
+
+\subsubsection{Noise, null tests, and comparison maps}
+
+The source density limits map resolution: finer bins contain fewer galaxies and more shape noise. Smoothing suppresses noise but broadens genuine structures. Comparing maps requires consistent selections, coordinates, masks, and smoothing. Galaxy shapes must be expressed in the reconstruction's coordinate basis using their spin-2 transformation~\cite{schneider_weak_2006}.
+
+LITB~IV estimates map noise by randomizing galaxy orientations and repeating the reconstruction. At each map position, the scatter across these realizations gives an estimate $\sigma_\kappa$, from which a local signal-to-noise map can be formed:
+\begin{equation}
+    \nu(\boldsymbol{\theta})=
+    \frac{\kappa_E(\boldsymbol{\theta})}{\sigma_\kappa(\boldsymbol{\theta})}.
+    \label{eq:map-snr}
+\end{equation}
+This estimates noise for the adopted catalog and reconstruction, excluding calibration and source-redshift uncertainties. Smoothing correlates neighboring pixels, so a local peak's signal-to-noise ratio is not a global detection significance~\cite{saha_lensing_2026,schneider_weak_2006}.
+
+A B-mode map is a useful null test for the leading scalar-potential lensing model. Residual PSF patterns, noise, and boundaries can contribute to it. Conversely, a multiplicative error can rescale a pure E-mode signal without generating a B mode, so a small B mode cannot certify the E-mode calibration~\cite{schneider_weak_2006,mandelbaum_weak_2018}.
+
+LITB~IV compares lensing maps with X-ray emission and the density of red-sequence cluster members, galaxies selected from a narrow locus in color--magnitude space. Lensing traces total projected mass; the other maps trace hot gas and member galaxies, respectively. Their structures can differ, especially in mergers~\cite{saha_lensing_2026}.
+
+\clearpage
+\singlespacing
+\printbibliography[heading=bibintoc,title={References}]
+
 \end{document}
