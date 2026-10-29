@@ -1,7 +1,15 @@
 \subsection{ShearNet as a shape estimator}
 \label{sec:shearnet}
 
-ShearNet applies these learning methods to simulated galaxy images, with \texttt{ngmix} providing a model-fitting comparison. Its two-branch architecture processes the galaxy and PSF images into separate features, which can then be combined through the cross-attention described above. Providing the PSF explicitly allows the prediction to depend on the local observing conditions. Forklens supplies a related precedent for separate galaxy and PSF branches in learned shape measurement~\cite{field_shearnet_2026,zhang_forklens_2024}.
+% FIGURE IDEA (core; fig:shearnet-inputs): Follow galaxy and PSF stamps through
+% two feature branches, cross-attention, and shape prediction. Show a toy query
+% combining two value vectors with normalized weights to make attention concrete.
+% Reader cue: hold the galaxy input fixed and trace where PSF information enters.
+% Label the output as a galaxy-shape estimate, not a measured cluster shear;
+% check architecture details against the cited code revision when drawing it.
+% Sources: field_shearnet_2026, vaswani_attention_2017.
+
+ShearNet applies these learning methods to simulated galaxy images, with \texttt{ngmix} providing a model-fitting comparison. Its two-branch architecture processes the galaxy and PSF images into separate features, which can then be combined through the cross-attention in \cref{eq:attention}. Providing the PSF explicitly allows the prediction to depend on the local observing conditions. Forklens supplies a related precedent for separate galaxy and PSF branches in learned shape measurement~\cite{field_shearnet_2026,zhang_forklens_2024}.
 
 The names of output variables need care. In ShearNet's simulator, labels called \texttt{g1} and \texttt{g2} describe the pre-PSF shape of the rendered galaxy, including the composition of its intrinsic shape with any applied shear. They are not a known cluster shear assigned independently to each real galaxy. Auxiliary targets can include total flux and half-light radius, the radius enclosing half the model's flux. Inferring the lensing field still requires an ensemble and its response~\cite{field_shearnet_2026}.
 
@@ -11,9 +19,16 @@ The spin-2 transformation gives the network a useful constraint. For a transform
     =\rho_2(T)f(\boldsymbol{x}_{\mathrm{gal}},\boldsymbol{x}_{\mathrm{PSF}}),
     \label{eq:equivariance}
 \end{equation}
-where $\rho_2(T)$ is the corresponding action on the two shape components. Equivariance means that the output changes in the prescribed way, whereas invariance means that it does not change. A flux prediction should be invariant to a rotation; an ellipticity prediction generally should not~\cite{cohen_group_2016,lin_d_4cnntimesanacal_2026}.
+where $\rho_2(T)$ is the corresponding action on the two shape components. Equivariance means that the output changes in the prescribed way, whereas invariance means that it does not change. A flux prediction should be invariant to a rotation; an ellipticity prediction generally should not~\cite{cohen_group_2016,lin_dcnnanacal_2026}.
 
-The square-pixel group $D_4$ contains the four right-angle rotations and their reflections. These transformations can be applied without interpolating the pixels. ShearNet's $D_4$ model evaluates shared features over this set and combines them with the appropriate spin-2 signs. This imposes the discrete symmetry, but does not enforce arbitrary-angle rotation symmetry or correct shear calibration. In particular, rotating the galaxy and PSF together is different from changing only the PSF while holding the galaxy fixed. The latter probes sensitivity to an observing condition~\cite{cohen_group_2016,lin_d_4cnntimesanacal_2026,field_shearnet_2026}.
+The square-pixel group $D_4$ contains the four right-angle rotations and their reflections. These transformations can be applied without interpolating the pixels. ShearNet's $D_4$ model evaluates shared features over this set and combines them with the appropriate spin-2 signs. This imposes the discrete symmetry, but does not enforce arbitrary-angle rotation symmetry or correct shear calibration. In particular, rotating the galaxy and PSF together is different from changing only the PSF while holding the galaxy fixed. The latter probes sensitivity to an observing condition~\cite{cohen_group_2016,lin_dcnnanacal_2026,field_shearnet_2026}.
+
+% FIGURE IDEA (optional inset; fig:spin-two): Rotate a galaxy and its PSF
+% together by 90 degrees, then 180 degrees, keeping the coordinate axes fixed.
+% Show the ideal shape components changing sign at 90 degrees and returning
+% at 180 degrees. Reader cue: turn the ellipse mentally before checking signs.
+% Keep this separate from rotating only the PSF. Sources: schneider_weak_2006,
+% cohen_group_2016; eq:equivariance. Could be an inset in fig:shearnet-inputs.
 
 Symmetry alone does not determine the response of a learned estimator. The prediction loss also matters: for squared-error regression, the ideal unrestricted predictor is the conditional mean of the target under the training distribution. A simple example shows why small prediction error does not guarantee correct response. Suppose $x=y+n$, with independent, zero-mean Gaussian variables of variances $\sigma_y^2$ and $\sigma_n^2$. Then
 \begin{equation}
@@ -23,4 +38,4 @@ Symmetry alone does not determine the response of a learned estimator. The predi
 \end{equation}
 The optimal prediction shrinks uncertain measurements toward zero. Its response to a coherent shift of $x$ is smaller than one, despite being optimal for the training loss. This illustrative calculation is not a model of the full ShearNet pipeline; it explains why prediction error and shear calibration answer different questions. Tewes et al. address this distinction by constructing learning objectives around averages over noisy realizations~\cite{goodfellow_deep_2016,tewes_weak-lensing_2019}.
 
-Automatic differentiation provides a way to address this distinction during training: a differentiable renderer makes it possible to penalize an incorrect shear response or unwanted sensitivity to PSF changes. For an ellipticity target, the appropriate individual shear response follows from Eq.~\eqref{eq:ellipticity-transform}; setting every galaxy's response to the identity would impose a different condition. Lin et al. combine differentiable shape measurement with analytical calibration, illustrating why learned measurements and explicit response control belong together. Such constraints supplement the prediction loss. They do not remove the need to test the selected ensemble on independent images~\cite{lin_d_4cnntimesanacal_2026,field_shearnet_2026}.
+Automatic differentiation provides a way to address this distinction during training: a differentiable renderer makes it possible to penalize an incorrect shear response or unwanted sensitivity to PSF changes. For an ellipticity target, the appropriate individual shear response follows from \cref{eq:ellipticity-transform}; setting every galaxy's response to the identity would impose a different condition. Lin et al. combine differentiable shape measurement with analytical calibration, illustrating why learned measurements and explicit response control belong together. Such constraints supplement the prediction loss. They do not remove the need to test the selected ensemble on independent images~\cite{lin_dcnnanacal_2026,field_shearnet_2026}.

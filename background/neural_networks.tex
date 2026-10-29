@@ -3,10 +3,17 @@
 
 \subsubsection{Learning a function from examples}
 
+% FIGURE IDEA (core; fig:learning-loop): Trace a simulated stamp and its target
+% through prediction, loss, gradient, and a weight update. A second lane shows
+% inference on a new stamp with weights frozen and no target supplied.
+% Reader cue: identify what changes during training and what is unavailable
+% for a real galaxy. Use a small numerical toy prediction, not invented results.
+% Sources: goodfellow_deep_2016, baydin_automatic_2018; eq:mse.
+
 Instead of fitting a light profile to each observed galaxy, a neural network can learn a mapping from images to galaxy properties using examples with known targets. This is \emph{supervised learning}. In image regression, an input $\boldsymbol{x}$ contains pixel values and any additional information supplied to the model; the target $\boldsymbol{y}$ contains continuous quantities such as shape or flux. A neural network writes the prediction as $f_{\boldsymbol{w}}(\boldsymbol{x})$, with adjustable parameters $\boldsymbol{w}$. A typical layer forms
 \begin{equation}
     \boldsymbol{z}^{(\ell+1)}=
-    \phi\!\left(W^{(\ell)}\boldsymbol{z}^{(\ell)}+\boldsymbol{b}^{(\ell)}\right),
+    \phi\!\left(W^{(\ell)}\boldsymbol{z}^{(\ell)}+\boldsymbol{b}^{(\ell)}\right).
     \label{eq:network-layer}
 \end{equation}
 Here $W^{(\ell)}$ contains learned weights, $\boldsymbol{b}^{(\ell)}$ contains learned offsets, and $\boldsymbol{z}^{(\ell)}$ is an intermediate numerical representation, or feature vector. The activation $\phi$ applies a nonlinear function to its components. Without nonlinearities, a sequence of affine layers would collapse to a single affine map. The term \emph{deep} refers to composing multiple learned layers~\cite{goodfellow_deep_2016}.
@@ -24,6 +31,13 @@ with output weights $\lambda_k$. Parameters are updated using gradients evaluate
 Training error is not an independent performance measurement. A validation set supports choices such as when to stop training; a test set evaluates the chosen model afterward. These roles matter in simulations: rotated copies or new noise realizations of a galaxy still share underlying structure. Keeping related realizations together when splitting data avoids treating nearly repeated examples as independent evidence of generalization~\cite{goodfellow_deep_2016,tewes_weak-lensing_2019}.
 
 \subsubsection{Convolution and attention}
+
+% FIGURE IDEA (optional; fig:convolution-window): Slide one 3x3 numerical filter
+% over a tiny image in three panels; highlight the products and their sum at
+% one output pixel, then reuse those same weights at the neighboring pixel.
+% Reader cue: compute one output by hand before revealing the feature map.
+% Show the indexing in eq:convolution (ML cross-correlation); distinguish this
+% learned filter from the instrument's PSF. Source: goodfellow_deep_2016.
 
 A fully connected layer assigns separate weights to every input--output connection. A convolutional neural network (CNN) instead reuses a small filter over the image. In the usual machine-learning convention, a two-dimensional convolutional layer computes
 \begin{equation}

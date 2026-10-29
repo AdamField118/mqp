@@ -3,6 +3,19 @@
 
 \subsubsection{From classical scattering to light deflection}
 
+% FIGURE IDEAS: candidates, not a requirement to include every figure.
+% Prefer a few linked visual experiments: predict a change, compare panels,
+% then connect the observation to the equation. Reuse axes, symbols, and colors.
+% Draw original schematics; cite the sources below in the eventual captions.
+% Keep these planning comments out of the rendered manuscript.
+
+% FIGURE IDEA (core; fig:scattering): Follow one particle past a point mass.
+% Overlay the straight reference path and bent trajectory; label b, v, and
+% transverse acceleration arrows. Beside it, compare b and 2b at fixed M,v.
+% Reader cue: predict which path bends more, then check the inverse-b scaling.
+% Separate the Newtonian analogy from the GR light-bending factor of two;
+% label any exaggerated bending. Sources: yoo_weak_2026, bartelmann_weak_2001.
+
 A useful starting point is the gravitational scattering of a test particle by a point mass. This construction follows the progression in Yoo's weak-lensing lecture notes~\cite{yoo_weak_2026}: first determine the bending of a trajectory, then use the observer--lens--source geometry to relate that bending to an image position. The extension to neighboring rays will describe the distortion of a resolved galaxy.
 
 Place a mass $M$ at the origin and let a particle approach with speed $v$ along the $z$ direction. Its unperturbed path passes the mass at transverse distance $b$, the \emph{impact parameter}. If the deflection is small, the acceleration can be evaluated along this straight path, with $z=vt$. The transverse component is
@@ -13,7 +26,7 @@ Place a mass $M$ at the origin and let a particle approach with speed $v$ along 
 where the negative sign indicates acceleration toward the mass. Integrating over the encounter gives
 \begin{equation}
     \Delta v_{\perp}
-    =-GMb\int_{-\infty}^{\infty}\frac{dt}{\left(b^2+v^2t^2\right)^{3/2}}
+    =-GMb\int_{-\infty}^{\infty}\frac{\mathrm{d}t}{\left(b^2+v^2t^2\right)^{3/2}}
     =-\frac{2GM}{bv}.
     \label{eq:classical-impulse}
 \end{equation}
@@ -28,44 +41,59 @@ The classical analogy captures the dependence on mass and impact parameter; the 
 
 \subsubsection{Lens geometry and the Einstein radius}
 
-For a localized lens, the \emph{thin-lens approximation} replaces the continuous bending along the ray with a change of direction at one plane. A galaxy cluster can be treated this way when its depth is small compared with the distances separating observer, lens, and source. Let $D_l$, $D_s$, and $D_{ls}$ be the angular-diameter distances from observer to lens, observer to source, and lens to source. These distances convert an angle into a transverse physical separation at the relevant plane. In an expanding universe, $D_{ls}$ is not generally $D_s-D_l$~\cite{bartelmann_weak_2001,schneider_weak_2006}.
+% FIGURE IDEA (core; fig:lens-geometry): Trace a ray from source through lens
+% to observer, with its apparent straight continuation drawn dashed. Mark
+% beta, theta, xi, and the physical bend; distinguish alpha from alpha-hat.
+% Add a small source-position sequence: centered ring, then two offset images.
+% Reader cue: move the source sideways mentally and predict where images go.
+% Distances are angular-diameter labels, not ruler lengths with D_ls=D_s-D_l.
+% Sources: yoo_weak_2026, schneider_weak_2006; use eq:point-lens-images.
 
-Measure angles relative to the direction of the lens center. The observed image lies at $\boldsymbol{\theta}$, while $\boldsymbol{\beta}$ is the angular position the source would have without deflection. The ray crosses the lens plane at physical position $\boldsymbol{\xi}=D_l\boldsymbol{\theta}$. In the small-angle geometry, extending the observed ray without bending would place it at $D_s\boldsymbol{\theta}$ on the source plane. The bend changes that position by $D_{ls}\widehat{\boldsymbol{\alpha}}$, giving
+For a localized lens, the \emph{thin-lens approximation} replaces the continuous bending along the ray with a change of direction at one plane. A galaxy cluster can be treated this way when its depth is small compared with the distances separating observer, lens, and source. Let $D_{\mathrm{l}}$, $D_{\mathrm{s}}$, and $D_{\mathrm{ls}}$ be the angular-diameter distances from observer to lens, observer to source, and lens to source. These distances convert an angle into a transverse physical separation at the relevant plane. In an expanding universe, $D_{\mathrm{ls}}$ is not generally $D_{\mathrm{s}}-D_{\mathrm{l}}$~\cite{bartelmann_weak_2001,schneider_weak_2006}.
+
+Measure angles relative to the direction of the lens center. The observed image lies at $\boldsymbol{\theta}$, while $\boldsymbol{\beta}$ is the angular position the source would have without deflection. The ray crosses the lens plane at physical position $\boldsymbol{\xi}=D_{\mathrm{l}}\boldsymbol{\theta}$. In the small-angle geometry, extending the observed ray without bending would place it at $D_{\mathrm{s}}\boldsymbol{\theta}$ on the source plane. The bend changes that position by $D_{\mathrm{ls}}\widehat{\boldsymbol{\alpha}}$, giving
 \begin{equation}
-    D_s\boldsymbol{\beta}
-    =D_s\boldsymbol{\theta}-D_{ls}\widehat{\boldsymbol{\alpha}}(D_l\boldsymbol{\theta}).
+    D_{\mathrm{s}}\boldsymbol{\beta}
+    =D_{\mathrm{s}}\boldsymbol{\theta}-D_{\mathrm{ls}}\widehat{\boldsymbol{\alpha}}(D_{\mathrm{l}}\boldsymbol{\theta}).
     \label{eq:lens-geometry}
 \end{equation}
-For a point mass, the conventional deflection vector $\widehat{\boldsymbol{\alpha}}$ points in the direction of $\boldsymbol{\xi}$ and is subtracted in this equation. It is therefore opposite to the signed transverse velocity change in Eq.~\eqref{eq:classical-impulse}; the physical bending is toward the mass. Dividing by $D_s$ defines the scaled deflection $\boldsymbol{\alpha}$ and yields the \emph{lens equation}~\cite{yoo_weak_2026,schneider_weak_2006}:
+For a point mass, the conventional deflection vector $\widehat{\boldsymbol{\alpha}}$ points in the direction of $\boldsymbol{\xi}$ and is subtracted in this equation. It is therefore opposite to the signed transverse velocity change in \cref{eq:classical-impulse}; the physical bending is toward the mass. Dividing by $D_{\mathrm{s}}$ defines the scaled deflection $\boldsymbol{\alpha}$ and yields the \emph{lens equation}~\cite{yoo_weak_2026,schneider_weak_2006}:
 \begin{equation}
     \boldsymbol{\beta}=\boldsymbol{\theta}-\boldsymbol{\alpha}(\boldsymbol{\theta}),
     \qquad
     \boldsymbol{\alpha}(\boldsymbol{\theta})
-    =\frac{D_{ls}}{D_s}\widehat{\boldsymbol{\alpha}}(D_l\boldsymbol{\theta}).
+    =\frac{D_{\mathrm{ls}}}{D_{\mathrm{s}}}\widehat{\boldsymbol{\alpha}}(D_{\mathrm{l}}\boldsymbol{\theta}).
     \label{eq:scaled-deflection}
 \end{equation}
 
-For a point mass, $b=D_l|\boldsymbol{\theta}|$. Substituting Eq.~\eqref{eq:point-mass-deflection} into the lens equation gives
+For a point mass, $b=D_{\mathrm{l}}|\boldsymbol{\theta}|$. Substituting \cref{eq:point-mass-deflection} into the lens equation gives
 \begin{equation}
     \boldsymbol{\beta}=\boldsymbol{\theta}
-    -\theta_E^2\frac{\boldsymbol{\theta}}{|\boldsymbol{\theta}|^2},
+    -\theta_{\mathrm{E}}^2\frac{\boldsymbol{\theta}}{|\boldsymbol{\theta}|^2},
     \qquad
-    \theta_E^2=\frac{4GM}{c^2}\frac{D_{ls}}{D_lD_s}.
+    \theta_{\mathrm{E}}^2=\frac{4GM}{c^2}\frac{D_{\mathrm{ls}}}{D_{\mathrm{l}}D_{\mathrm{s}}}.
     \label{eq:einstein-radius}
 \end{equation}
-If the source is exactly behind the lens, $\boldsymbol{\beta}=\boldsymbol{0}$, every image direction with $|\boldsymbol{\theta}|=\theta_E$ satisfies the equation. An ideal point source then produces an Einstein ring, and $\theta_E$ is its angular radius. For an offset source, the two images lie along the source--lens axis. Using signed coordinates on that axis reduces the equation to $\beta=\theta-\theta_E^2/\theta$, with solutions
+If the source is exactly behind the lens, $\boldsymbol{\beta}=\boldsymbol{0}$, every image direction with $|\boldsymbol{\theta}|=\theta_{\mathrm{E}}$ satisfies the equation. An ideal point source then produces an Einstein ring, and $\theta_{\mathrm{E}}$ is its angular radius. For an offset source, the two images lie along the source--lens axis. Using signed coordinates on that axis reduces the equation to $\beta=\theta-\theta_{\mathrm{E}}^2/\theta$, with solutions
 \begin{equation}
-    \theta_{\pm}=\frac{\beta\pm\sqrt{\beta^2+4\theta_E^2}}{2}.
+    \theta_{\pm}=\frac{\beta\pm\sqrt{\beta^2+4\theta_{\mathrm{E}}^2}}{2}.
     \label{eq:point-lens-images}
 \end{equation}
 The opposite signs place the images on opposite sides of the lens. This example separates weak gravitational fields from weak image distortions: the field can be weak along the ray while the image mapping produces strong-lensing features near an Einstein ring~\cite{yoo_weak_2026,bartelmann_weak_2001}.
 
 \subsubsection{An extended lens and its projected potential}
 
+% FIGURE IDEA (optional; fig:projected-mass): Show a translucent stack of mass
+% slices collapsing into a surface-density map, then deflection arrows on it.
+% Reader cue: slide matter along the depth of a thin lens while preserving
+% each column's total mass; the projected map stays fixed in this approximation.
+% Do not imply that widely separated lens planes are interchangeable.
+% Sources: yoo_weak_2026, bartelmann_weak_2001; eq:convergence.
+
 A cluster has an extended mass distribution rather than a single point mass. In the weak-field approximation, the potential and leading-order deflections of small mass elements add linearly. Summing the point-mass contributions therefore extends the scattering calculation to the whole lens. Let $\Phi(\boldsymbol{\xi},z)$ be its Newtonian gravitational potential, with $z$ now a physical line-of-sight coordinate through the lens. The deflection generalizes to the integrated transverse potential gradient,
 \begin{equation}
     \widehat{\boldsymbol{\alpha}}(\boldsymbol{\xi})
-    =\frac{2}{c^2}\int dz\,\boldsymbol{\nabla}_{\xi}\Phi(\boldsymbol{\xi},z).
+    =\frac{2}{c^2}\int \mathrm{d}z\,\boldsymbol{\nabla}_{\xi}\Phi(\boldsymbol{\xi},z).
     \label{eq:potential-deflection}
 \end{equation}
 The integral is evaluated along the approximately undeflected path through the lens. For $\Phi=-GM/(|\boldsymbol{\xi}|^2+z^2)^{1/2}$, its magnitude is $4GM/(c^2|\boldsymbol{\xi}|)$, recovering the point-mass result. Thus the same gradient construction applies to a continuous mass distribution~\cite{yoo_weak_2026,bartelmann_weak_2001}.
@@ -73,11 +101,11 @@ The integral is evaluated along the approximately undeflected path through the l
 It is convenient to absorb the distance factors into a dimensionless projected lensing potential $\psi$. Since only potential differences affect deflection, choose a reference direction $\boldsymbol{\theta}_0$ away from any mass singularity and define
 \begin{equation}
     \psi(\boldsymbol{\theta})=
-    \frac{2D_{ls}}{c^2D_lD_s}\int dz\,
-    \left[\Phi(D_l\boldsymbol{\theta},z)-\Phi(D_l\boldsymbol{\theta}_0,z)\right].
+    \frac{2D_{\mathrm{ls}}}{c^2D_{\mathrm{l}}D_{\mathrm{s}}}\int \mathrm{d}z\,
+    \left[\Phi(D_{\mathrm{l}}\boldsymbol{\theta},z)-\Phi(D_{\mathrm{l}}\boldsymbol{\theta}_0,z)\right].
     \label{eq:projected-potential}
 \end{equation}
-The reference term is independent of $\boldsymbol{\theta}$ and fixes an otherwise arbitrary additive constant. It also avoids the divergent constant in the line integral of an isolated point-mass potential. The chain rule gives $\boldsymbol{\nabla}_{\theta}=D_l\boldsymbol{\nabla}_{\xi}$ when acting on the first term, so Eqs.~\eqref{eq:scaled-deflection} and~\eqref{eq:potential-deflection} imply
+The reference term is independent of $\boldsymbol{\theta}$ and fixes an otherwise arbitrary additive constant. It also avoids the divergent constant in the line integral of an isolated point-mass potential. The chain rule gives $\boldsymbol{\nabla}_{\theta}=D_{\mathrm{l}}\boldsymbol{\nabla}_{\xi}$ when acting on the first term, so \cref{eq:scaled-deflection,eq:potential-deflection} imply
 \begin{equation}
     \boldsymbol{\alpha}=\boldsymbol{\nabla}_{\theta}\psi,
     \qquad
@@ -86,33 +114,41 @@ The reference term is independent of $\boldsymbol{\theta}$ and fixes an otherwis
 \end{equation}
 Here $\Phi$ has dimensions of velocity squared, whereas $\psi$ is dimensionless and differentiated with respect to angular coordinates. These distinctions are needed when relating image distortions to a physical mass density~\cite{yoo_weak_2026,schneider_weak_2006}.
 
-Let $\rho(\boldsymbol{\xi},z)$ be the physical density of the localized lens and define its projected surface density by $\Sigma(\boldsymbol{\xi})=\int \rho(\boldsymbol{\xi},z)\,dz$. The three-dimensional Poisson equation is $\nabla^2\Phi=4\pi G\rho$. Writing $\nabla^2=\nabla_{\xi}^2+\partial_z^2$ and integrating along the line of sight gives
+Let $\rho(\boldsymbol{\xi},z)$ be the physical density of the localized lens and define its projected surface density by $\Sigma(\boldsymbol{\xi})=\int \rho(\boldsymbol{\xi},z)\,\mathrm{d}z$. The three-dimensional Poisson equation is $\nabla^2\Phi=4\pi G\rho$. Writing $\nabla^2=\nabla_{\xi}^2+\partial_z^2$ and integrating along the line of sight gives
 \begin{equation}
-    \int dz\,\nabla_{\xi}^2\Phi
+    \int \mathrm{d}z\,\nabla_{\xi}^2\Phi
     =4\pi G\Sigma
     -\left[\partial_z\Phi\right]_{-\infty}^{+\infty}
     =4\pi G\Sigma,
     \label{eq:projected-poisson}
 \end{equation}
-where the boundary term vanishes for an isolated lens whose gravitational field decays far from the mass. Taking the angular Laplacian of Eq.~\eqref{eq:projected-potential} then yields
+where the boundary term vanishes for an isolated lens whose gravitational field decays far from the mass. Taking the angular Laplacian of \cref{eq:projected-potential} then yields
 \begin{equation}
     \nabla_{\theta}^2\psi
-    =\frac{8\pi G}{c^2}\frac{D_lD_{ls}}{D_s}\Sigma(D_l\boldsymbol{\theta})
+    =\frac{8\pi G}{c^2}\frac{D_{\mathrm{l}}D_{\mathrm{ls}}}{D_{\mathrm{s}}}\Sigma(D_{\mathrm{l}}\boldsymbol{\theta})
     =2\kappa(\boldsymbol{\theta}),
     \label{eq:lensing-poisson}
 \end{equation}
 where the \emph{convergence} $\kappa$ and the critical surface density are defined by
 \begin{equation}
-    \kappa(\boldsymbol{\theta})=\frac{\Sigma(D_l\boldsymbol{\theta})}{\Sigma_{\mathrm{crit}}},
+    \kappa(\boldsymbol{\theta})=\frac{\Sigma(D_{\mathrm{l}}\boldsymbol{\theta})}{\Sigma_{\mathrm{crit}}},
     \qquad
-    \Sigma_{\mathrm{crit}}=\frac{c^2}{4\pi G}\frac{D_s}{D_lD_{ls}}.
+    \Sigma_{\mathrm{crit}}=\frac{c^2}{4\pi G}\frac{D_{\mathrm{s}}}{D_{\mathrm{l}}D_{\mathrm{ls}}}.
     \label{eq:convergence}
 \end{equation}
 Convergence is therefore a dimensionless measure of projected mass, scaled by the observer--lens--source geometry. For a fixed cluster, different source distances give different $\Sigma_{\mathrm{crit}}$ and hence different lensing strengths. The surface density here is mass per physical area; no comoving-area convention is being used~\cite{yoo_weak_2026,bartelmann_weak_2001}.
 
 \subsubsection{Convergence, shear, and magnification}
 
-A constant deflection shifts a source's apparent position. A resolved galaxy changes shape because neighboring rays are deflected by different amounts. Across an image small enough that the deflection gradient is nearly constant, expand the lens equation as $\delta\boldsymbol{\beta}=A\,\delta\boldsymbol{\theta}$. Differentiating Eq.~\eqref{eq:lens-equation} gives
+% FIGURE IDEA (core; fig:lensing-grid): Put circles on a square source grid;
+% compare a uniform shift, positive convergence, gamma_1, and gamma_2.
+% Reader cue: imagine marks on a rubber sheet; which operation changes position,
+% size, or orientation? Use fixed axes and change one parameter per panel.
+% Form image shapes with A^{-1}, not A; annotate the actual kappa/gamma values.
+% Keep surface brightness fixed and do not claim pure shear preserves area
+% exactly. Sources: yoo_weak_2026, schneider_weak_2006; eq:jacobian.
+
+A constant deflection shifts a source's apparent position. A resolved galaxy changes shape because neighboring rays are deflected by different amounts. Across an image small enough that the deflection gradient is nearly constant, expand the lens equation as $\delta\boldsymbol{\beta}=A\,\delta\boldsymbol{\theta}$. Differentiating \cref{eq:lens-equation} gives
 \begin{equation}
     A_{ij}=\frac{\partial\beta_i}{\partial\theta_j}
     =\delta_{ij}-\psi_{,ij}
@@ -122,7 +158,7 @@ A constant deflection shifts a source's apparent position. A resolved galaxy cha
     \end{pmatrix},
     \label{eq:jacobian}
 \end{equation}
-where $\delta_{ij}$ is the identity matrix and commas denote angular derivatives. The trace and traceless parts of the potential Hessian define
+where $\delta_{ij}$ is the Kronecker delta (the components of the identity matrix) and commas denote angular derivatives. The trace and traceless parts of the potential Hessian define
 \begin{equation}
     \kappa=\frac{\psi_{,11}+\psi_{,22}}{2},
     \qquad
@@ -131,7 +167,7 @@ where $\delta_{ij}$ is the identity matrix and commas denote angular derivatives
     \gamma_2=\psi_{,12}.
     \label{eq:potential-derivatives}
 \end{equation}
-The first definition agrees with Eq.~\eqref{eq:lensing-poisson}. The equality of mixed derivatives makes $A$ symmetric: this single-plane potential mapping has no antisymmetric image-rotation term~\cite{yoo_weak_2026,schneider_weak_2006}.
+The first definition agrees with \cref{eq:lensing-poisson}. The equality of mixed derivatives makes $A$ symmetric: this single-plane potential mapping has no antisymmetric image-rotation term~\cite{yoo_weak_2026,schneider_weak_2006}.
 
 The matrix $A$ maps image offsets to source offsets, so the stretching of the observed image is described by $A^{-1}$. With no shear, $A=(1-\kappa)I$; positive convergence with $\kappa<1$ enlarges the image equally in both directions. Shear produces unequal stretching. The component $\gamma_1$ distinguishes the two coordinate axes, while $\gamma_2$ describes the same type of distortion along axes rotated by \ang{45}. If $\gamma=\gamma_1+i\gamma_2$, the two eigenvalues of $A$ are
 \begin{equation}
@@ -145,7 +181,7 @@ A small circular source consequently appears as an ellipse with principal stretc
     \label{eq:magnification}
 \end{equation}
 
-Galaxy shapes measure the relative stretching of the two axes, rather than an overall isotropic change in size. Factoring $(1-\kappa)$ out of Eq.~\eqref{eq:jacobian} shows that these relative distortions depend on the \emph{reduced shear},
+Galaxy shapes measure the relative stretching of the two axes, rather than an overall isotropic change in size. Factoring $(1-\kappa)$ out of \cref{eq:jacobian} shows that these relative distortions depend on the \emph{reduced shear},
 \begin{equation}
     g=g_1+ig_2=\frac{\gamma_1+i\gamma_2}{1-\kappa}.
     \label{eq:reduced-shear}
@@ -153,6 +189,14 @@ Galaxy shapes measure the relative stretching of the two axes, rather than an ov
 The weak-lensing limit used here is $|\kappa|,|\gamma|\ll1$, in which $g\simeq\gamma$ and image distortions are small. This is more restrictive than requiring a weak gravitational field along a light ray. Cluster cores can contain strong-lensing features even when the surrounding field is suitable for weak-lensing analysis~\cite{bartelmann_weak_2001,schneider_weak_2006}.
 
 \subsubsection{Ellipticity and shape noise}
+
+% FIGURE IDEA (core; fig:shape-ensemble): Pair the same randomly oriented
+% intrinsic ellipses before and after one small applied reduced shear. Beneath
+% them, plot their components and the ensemble mean for increasing sample size.
+% Reader cue: try identifying the shear from one galaxy, then from the ensemble.
+% Keep the random seed and intrinsic population fixed when comparing panels;
+% mark true g and show sampling scatter, not a guaranteed monotonic convergence.
+% Source: schneider_weak_2006; use eq:ellipticity-transform, not vector addition.
 
 To relate this distortion to galaxy shapes, consider an ideal image with elliptical isophotes (contours of equal surface brightness). Define its complex ellipticity by
 \begin{equation}
@@ -162,11 +206,11 @@ To relate this distortion to galaxy shapes, consider an ideal image with ellipti
 \end{equation}
 where $a$ and $b$ are the major and minor semiaxes and $\varphi$ is the major-axis angle. The factor of two expresses a physical symmetry: rotating an ellipse by \ang{180} leaves its shape unchanged. Ellipticity and shear are consequently called spin-2 quantities. For an active rotation of the image through an angle $\alpha$ in fixed coordinates, $\epsilon$ transforms as $\epsilon\exp(2i\alpha)$~\cite{schneider_weak_2006}.
 
-Several shape conventions appear in lensing software. In particular, the distortion $\chi=[(a^2-b^2)/(a^2+b^2)]\exp(2i\varphi)$ satisfies $\chi=2\epsilon/(1+|\epsilon|^2)$ and has a different shear response. Yoo's notes use $\epsilon$ for this quadratic-axis convention; here it is denoted $\chi$ to keep it distinct from Eq.~\eqref{eq:ellipticity}. The convention must therefore be specified before comparing outputs from different estimators. Here $\epsilon$ denotes the ideal ellipticity in Eq.~\eqref{eq:ellipticity}, before instrumental blurring, and $\boldsymbol{e}$ will denote a measured two-component shape statistic that still requires calibration~\cite{yoo_weak_2026,schneider_weak_2006}.
+Several shape conventions appear in lensing software. In particular, the distortion $\chi=[(a^2-b^2)/(a^2+b^2)]\exp(2i\varphi)$ satisfies $\chi=2\epsilon/(1+|\epsilon|^2)$ and has a different shear response. Yoo's notes use $\epsilon$ for this quadratic-axis convention; here it is denoted $\chi$ to keep it distinct from \cref{eq:ellipticity}. The convention must therefore be specified before comparing outputs from different estimators. Here $\epsilon$ denotes the ideal ellipticity in \cref{eq:ellipticity}, before instrumental blurring, and $\boldsymbol{e}$ will denote a measured two-component shape statistic that still requires calibration~\cite{yoo_weak_2026,schneider_weak_2006}.
 
-For a circular source in the weak-lensing regime, the two semiaxes are proportional to the reciprocal eigenvalues in Eq.~\eqref{eq:lensing-eigenvalues}. Their ratio gives $(a-b)/(a+b)=|g|$, and the orientation of the ellipse gives $\epsilon=g$. An intrinsically elliptical source already has a preferred shape before lensing. If $\epsilon^{\mathrm{s}}$ is that unlensed ellipticity, the ideal transformation for $|g|<1$ is
+For a circular source in the weak-lensing regime, the two semiaxes are proportional to the reciprocal eigenvalues in \cref{eq:lensing-eigenvalues}. Their ratio gives $(a-b)/(a+b)=|g|$, and the orientation of the ellipse gives $\epsilon=g$. An intrinsically elliptical source already has a preferred shape before lensing. If $\epsilon^{\mathrm{s}}$ is that unlensed ellipticity, the ideal transformation for $|g|<1$ is
 \begin{equation}
     \epsilon=\frac{\epsilon^{\mathrm{s}}+g}{1+g^*\epsilon^{\mathrm{s}}},
     \label{eq:ellipticity-transform}
 \end{equation}
-with $g^*$ the complex conjugate. Averaging over an isotropic distribution of intrinsic orientations gives $\langle\epsilon\rangle=g$. The intrinsic ellipticity of any particular galaxy is unknown, however, so its observed elongation cannot be assigned entirely to the lens. The resulting scatter is \emph{shape noise}. For $N$ independent galaxies sharing approximately the same shear, an ideal unweighted mean has per-component uncertainty $\sigma_{\epsilon,i}/\sqrt{N}$. Measurement noise, selection, and intrinsic alignments (correlations in unlensed galaxy orientations) complicate this ideal result~\cite{schneider_weak_2006,mandelbaum_weak_2018}.
+with $g^*$ the complex conjugate. Averaging over an isotropic distribution of intrinsic orientations gives $\langle\epsilon\rangle=g$. The intrinsic ellipticity of any particular galaxy is unknown, however, so its observed elongation cannot be assigned entirely to the lens. The resulting scatter is \emph{shape noise}. For $N$ independent galaxies sharing approximately the same shear, an ideal unweighted mean has per-component uncertainty $\sigma_{\epsilon,i}/\sqrt{N}$, where $\sigma_{\epsilon,i}$ is the standard deviation of intrinsic ellipticity component $i$. Measurement noise, selection, and intrinsic alignments (correlations in unlensed galaxy orientations) complicate this ideal result~\cite{schneider_weak_2006,mandelbaum_weak_2018}.

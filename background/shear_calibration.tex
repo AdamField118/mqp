@@ -3,7 +3,14 @@
 
 \subsubsection{Shape measurements and their response}
 
-The image model in Eq.~\eqref{eq:image-model} gives one route from recorded pixels to galaxy shape: fit a parameterized light profile after convolving it with the PSF. For Gaussian pixel noise with a known, parameter-independent covariance $C$, the image likelihood has the form
+% FIGURE IDEA (core; fig:shear-response): Show the same image under artificial
+% -Delta h, zero, and +Delta h, alongside measured e_i versus h_j. Draw the
+% secant used to estimate R_ij: calibration is measuring the estimator's slope.
+% Reader cue: compare two slopes and predict which needs the larger correction.
+% Label the PSF removal/reconvolution steps; do not simply shear a blurred stamp.
+% Sources: huff_metacalibration_2017, sheldon_practical_2017; eq:metacal.
+
+The image model in \cref{eq:image-model} gives one route from recorded pixels to galaxy shape: fit a parameterized light profile after convolving it with the PSF. For Gaussian pixel noise with a known, parameter-independent covariance $C$, the image likelihood has the form
 \begin{equation}
     -2\ln\mathcal{L}(\boldsymbol{q})=
     [\boldsymbol{d}-\boldsymbol{m}(\boldsymbol{q})]^{\mathsf T}
@@ -20,7 +27,7 @@ Whether a shape comes from profile fitting or another estimator, calibration mea
     R_{ij}=\left.\frac{\partial e_i}{\partial h_j}\right|_{\boldsymbol{h}=0}.
     \label{eq:response}
 \end{equation}
-The diagonal terms describe sensitivity to each shear component; the off-diagonal terms describe mixing between them. Even an accurate individual shape measurement need not have the identity matrix as its response. Equation~\eqref{eq:ellipticity-transform}, for example, has a response that depends on the intrinsic shape. Calibration concerns the ensemble used for the science measurement~\cite{schneider_weak_2006,sheldon_practical_2017}.
+The diagonal terms describe sensitivity to each shear component; the off-diagonal terms describe mixing between them. Even an accurate individual shape measurement need not have the identity matrix as its response. \Cref{eq:ellipticity-transform}, for example, has a response that depends on the intrinsic shape. Calibration concerns the ensemble used for the science measurement~\cite{schneider_weak_2006,sheldon_practical_2017}.
 
 Metacalibration estimates this response by modifying the observed images. It removes an estimated PSF, applies small positive and negative shears, and reconvolves with a suitable kernel to suppress modes that deconvolution would make unstable. The shape estimator is then run again:
 \begin{equation}
@@ -32,13 +39,20 @@ where $\boldsymbol{u}_j$ is the unit vector in shear direction $j$. Shearing a b
 
 \subsubsection{Selection, weights, and residual bias}
 
+% FIGURE IDEA (optional; fig:selection-response): Arrange numbered toy galaxies
+% near a detection or size threshold; compare which IDs survive +/- shear.
+% Carry those selected IDs back to the unsheared shapes before averaging.
+% Reader cue: the shapes being averaged can stay fixed while their membership
+% changes. Distinguish this selection effect from the individual shape response.
+% Source: sheldon_practical_2017; eq:selection-response.
+
 The response of a catalog includes more than the response of the galaxies already in it. A small shear can move an object across a detection threshold or a cut on signal-to-noise ratio or size. If inclusion depends on orientation, an initially isotropic population can acquire a nonzero mean shape. A selection response measures this effect by averaging shapes from images with no artificial shear, while determining membership from the positively and negatively sheared versions. With equal weights, its components are~\cite{sheldon_practical_2017}
 \begin{equation}
     R^{\mathrm{sel}}_{ij}\simeq
     \frac{\langle e_i(0)\rangle_{S_j^+}-\langle e_i(0)\rangle_{S_j^-}}{2\Delta h}.
     \label{eq:selection-response}
 \end{equation}
-The corresponding total response is $\langle R\rangle+R^{\mathrm{sel}}$. Weights that depend on measured quantities also affect the response. More generally, the object to differentiate is the complete selected, weighted mean,
+Here $S_j^{\pm}$ denotes the selection obtained under $\pm\Delta h\,\boldsymbol{u}_j$, while the averaged shapes $e_i(0)$ are measured without an artificial shear. The corresponding total response is $\langle R\rangle+R^{\mathrm{sel}}$. Weights that depend on measured quantities also affect the response. More generally, the object to differentiate is the complete selected, weighted mean,
 \begin{equation}
     \overline{\boldsymbol{e}}(\boldsymbol{h})=
     \frac{\sum_a S_a(\boldsymbol{h})w_a(\boldsymbol{h})\boldsymbol{e}_a(\boldsymbol{h})}
@@ -61,6 +75,6 @@ Independent simulations with known input shear test the remaining error. A compo
     =m_i g_i^{\mathrm{true}}+c_i.
     \label{eq:shear-bias}
 \end{equation}
-The multiplicative bias $m_i$ rescales the signal, while the additive bias $c_i$ shifts it. These are residual biases of the calibrated estimator, not the raw response in Eq.~\eqref{eq:response}. Noise can produce a bias as well as scatter, so increasing the sample size does not remove every measurement error~\cite{refregier_noise_2012,mandelbaum_weak_2018}.
+The multiplicative bias $m_i$ rescales the signal, while the additive bias $c_i$ shifts it. These are residual biases of the calibrated estimator, not the raw response in \cref{eq:response}. Noise can produce a bias as well as scatter, so increasing the sample size does not remove every measurement error~\cite{refregier_noise_2012,mandelbaum_weak_2018}.
 
 PSF leakage is a related diagnostic. One can test whether mean measured galaxy shapes vary with PSF ellipticity, and whether PSF-model residuals correlate across angular separations. Such correlations reveal different failure modes: a shape estimator may retain the imprint of a known anisotropic PSF, or an incorrect PSF model may supply the wrong correction. A flat trend in one diagnostic does not establish that all other biases vanish~\cite{rowe_improving_2010,saha_lensing_2026-1}.

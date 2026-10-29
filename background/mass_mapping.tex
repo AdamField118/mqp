@@ -5,11 +5,20 @@
 
 A calibrated shape catalog supplies samples of the lensing field at discrete sky positions. Before these samples can be combined into a cluster map, the galaxies carrying the cluster signal must be identified. A well-measured shape is useful for cluster lensing only if the galaxy lies behind the cluster. Foreground and cluster-member galaxies do not carry the same cluster-lensing signal. Under the idealized assumption that contaminants have zero mean shape, a fraction $f$ of such objects in an otherwise uniformly weighted sample reduces the mean signal by a factor $1-f$. Spatially varying contamination can then alter the inferred map morphology as well as its amplitude~\cite{schneider_weak_2006,mandelbaum_weak_2018}.
 
-A photometric color is a difference of magnitudes in two bands, and therefore measures a flux ratio. Colors contain information about a galaxy's spectrum and redshift, although different spectra can produce similar colors. LITB~IV uses the $(u-b,b-g)$ color plane to select background candidates, calibrating the selection with external redshifts. This is separate from selecting objects with reliable shapes. The retained sources also span a redshift distribution, so converting a convergence map into physical surface density requires the corresponding lensing-efficiency distribution, through $D_{ls}/D_s$ in Eq.~\eqref{eq:convergence}~\cite{saha_lensing_2026,schneider_weak_2006}.
+A photometric color is a difference of magnitudes in two bands, and therefore measures a flux ratio. Colors contain information about a galaxy's spectrum and redshift, although different spectra can produce similar colors. LITB~IV uses the $(u-b,b-g)$ color plane to select background candidates, calibrating the selection with external redshifts. This is separate from selecting objects with reliable shapes. The retained sources also span a redshift distribution, so converting a convergence map into physical surface density requires the corresponding lensing-efficiency distribution, through $D_{\mathrm{ls}}/D_{\mathrm{s}}$ in \cref{eq:convergence}~\cite{saha_lensing_2026,schneider_weak_2006}.
 
 \subsubsection{Kaiser--Squires reconstruction}
 
-Once the background-source sample is defined, the spatially averaged shapes estimate the reduced-shear field. Recovering convergence then uses the common potential in Eq.~\eqref{eq:potential-derivatives}. On a small, approximately planar sky patch, choose a Fourier convention for which $\partial_j$ becomes $ik_j$. For $\boldsymbol{k}\ne0$,
+% FIGURE IDEA (core; fig:mass-reconstruction): Begin with a known smooth toy
+% convergence field, derive its shear, sample galaxy shapes, and reconstruct it.
+% Reuse sky coordinates across panels so the reader can trace one mass peak
+% into a surrounding orientation pattern and back. Label truth as simulation.
+% Reader cue: predict the pattern around the peak before showing the shear.
+% State the weak-shear approximation and boundary treatment; compare recovered
+% and true kappa under the same mean convention. Sources: kaiser_mapping_1993,
+% schneider_weak_2006; eq:kaiser-squires and eq:mass-sheet.
+
+Once the background-source sample is defined, the spatially averaged shapes estimate the reduced-shear field. Recovering convergence then uses the common potential in \cref{eq:potential-derivatives}. On a small, approximately planar sky patch, choose a Fourier convention for which $\partial_j$ becomes $ik_j$. For $\boldsymbol{k}\ne0$,
 \begin{align}
     \widetilde\kappa&=-\tfrac12(k_1^2+k_2^2)\widetilde\psi, &
     \widetilde\gamma_1&=-\tfrac12(k_1^2-k_2^2)\widetilde\psi, &
@@ -18,30 +27,38 @@ Once the background-source sample is defined, the spatially averaged shapes esti
 \end{align}
 Eliminating $\widetilde\psi$ gives the Kaiser--Squires relation
 \begin{equation}
-    \widetilde\kappa_E+i\widetilde\kappa_B
+    \widetilde\kappa_{\mathrm{E}}+i\widetilde\kappa_{\mathrm{B}}
     =D^*(\boldsymbol{k})(\widetilde\gamma_1+i\widetilde\gamma_2),
     \qquad
     D(\boldsymbol{k})=\frac{k_1^2-k_2^2+2ik_1k_2}{k_1^2+k_2^2}.
     \label{eq:kaiser-squires}
 \end{equation}
-For an ideal shear field derived from a scalar lensing potential, $\kappa_E=\kappa$ and $\kappa_B=0$. The E/B notation describes the two components of this field decomposition; it does not refer to electromagnetic fields. In observations, the input is a spatial estimate from calibrated galaxy shapes, with $g\simeq\gamma$ assumed if the linear inversion is used directly~\cite{kaiser_mapping_1993,schneider_weak_2006}.
+For an ideal shear field derived from a scalar lensing potential, $\kappa_{\mathrm{E}}=\kappa$ and $\kappa_{\mathrm{B}}=0$. The E/B notation describes the two components of this field decomposition; it does not refer to electromagnetic fields. In observations, the input is a spatial estimate from calibrated galaxy shapes, with $g\simeq\gamma$ assumed if the linear inversion is used directly~\cite{kaiser_mapping_1993,schneider_weak_2006}.
 
 The zero Fourier mode is unconstrained: shear alone does not fix the mean convergence of the patch. More generally, for a single source plane, the transformation
 \begin{equation}
     \kappa'=\lambda\kappa+(1-\lambda),\qquad
-    \gamma'=\lambda\gamma
+    \gamma'=\lambda\gamma,
     \label{eq:mass-sheet}
 \end{equation}
 leaves the reduced shear unchanged. This is the mass-sheet degeneracy. Assigning a value to the mean map is a boundary or normalization choice, not an independent measurement of the missing mass sheet. Finite fields, masks, and nonuniform sampling introduce further complications because the ideal Fourier relation assumes access to the continuous field~\cite{schneider_weak_2006}.
 
 \subsubsection{Noise, null tests, and comparison maps}
 
+% FIGURE IDEA (core; fig:map-smoothing): Reconstruct the same noisy toy catalog
+% at three smoothing scales, with identical masks, map extent, and color scale.
+% Compare noise suppression against the broadening or merging of real peaks.
+% Reader cue: choose which apparent structures survive the scale change;
+% then reveal the input truth. Add a randomized-orientation noise panel if useful.
+% Do not equate a smooth peak or small B mode with validated calibration.
+% Sources: schneider_weak_2006, saha_lensing_2026; eq:map-snr.
+
 The source density limits map resolution: finer bins contain fewer galaxies and more shape noise. Smoothing suppresses noise but broadens genuine structures. Comparing maps requires consistent selections, coordinates, masks, and smoothing. Galaxy shapes must be expressed in the reconstruction's coordinate basis using their spin-2 transformation~\cite{schneider_weak_2006}.
 
 LITB~IV estimates map noise by randomizing galaxy orientations and repeating the reconstruction. At each map position, the scatter across these realizations gives an estimate $\sigma_\kappa$, from which a local signal-to-noise map can be formed:
 \begin{equation}
     \nu(\boldsymbol{\theta})=
-    \frac{\kappa_E(\boldsymbol{\theta})}{\sigma_\kappa(\boldsymbol{\theta})}.
+    \frac{\kappa_{\mathrm{E}}(\boldsymbol{\theta})}{\sigma_\kappa(\boldsymbol{\theta})}.
     \label{eq:map-snr}
 \end{equation}
 This estimates noise for the adopted catalog and reconstruction, excluding calibration and source-redshift uncertainties. Smoothing correlates neighboring pixels, so a local peak's signal-to-noise ratio is not a global detection significance~\cite{saha_lensing_2026,schneider_weak_2006}.

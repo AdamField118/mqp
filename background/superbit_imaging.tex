@@ -1,11 +1,18 @@
 \subsection{From lensed light to SuperBIT images}
 \label{sec:images}
 
+% FIGURE IDEA (core; fig:image-formation): Follow the same simulated galaxy
+% through lensing, PSF convolution, pixel integration, and added noise. Include
+% the PSF stamp; compare circular and elongated PSFs with the galaxy held fixed.
+% Reader cue: which elongation belongs to lensing, and which to the telescope?
+% Keep angular scale and intensity normalization consistent; label simulations
+% explicitly. Sources: rowe_galsim_2015, mandelbaum_weak_2018; eq:image-model.
+
 SuperBIT observed 30 galaxy clusters during its 2023 science flight, operating at an altitude of approximately \qty{33}{\kilo\metre}. Its observations exploit the low blue-wavelength sky background and high angular resolution available in the stratosphere. LITB~I established the advantage of blue-band lensing observations for this environment. LITB~III subsequently used the flight images to construct shape catalogs, with source detection in F480W ($b$) and complementary photometry in F400W ($u$) and F600W ($g$)~\cite{shaaban_weak_2022,saha_lensing_2026-1}.
 
-Recovering the mean shape described above requires accounting for how the telescope records each galaxy. The point-spread function (PSF) is the image the instrument would form of an unresolved point source. It describes the blurring of the ideal lensed surface brightness $I_{\mathrm{L}}$. Locally, a useful image model is~\cite{rowe_galsim_2015,mandelbaum_weak_2018}
+Recovering the ensemble mean $\langle\epsilon\rangle=g$ discussed in \cref{sec:lensing} requires accounting for how the telescope records each galaxy. The point-spread function (PSF) is the image the instrument would form of an unresolved point source. It describes the blurring of the ideal lensed surface brightness $I_{\mathrm{L}}$. Locally, a useful image model is~\cite{rowe_galsim_2015,mandelbaum_weak_2018}
 \begin{equation}
-    d_p=\int_{\Omega_p}\!d^2\theta\,
+    d_p=\int_{\Omega_p}\!\mathrm{d}^2\theta\,
     [P*I_{\mathrm{L}}](\boldsymbol{\theta})+n_p,
     \label{eq:image-model}
 \end{equation}
