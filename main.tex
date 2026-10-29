@@ -8,14 +8,30 @@
 \usepackage{cancel}
 \usepackage{graphicx}
 \usepackage{chngcntr}
+% Keep equation, figure, and table numbers local to their section.
+\counterwithin{figure}{section}
+\counterwithin{table}{section}
 \usepackage{setspace}
 \usepackage{parskip}
 \usepackage{indentfirst}
 \usepackage{titlesec}
-\usepackage{hyperref}
-
-\usepackage[backend=biber,style=numeric-comp]{biblatex}
+% Reference numbers follow first citation.
+\usepackage[backend=biber,style=numeric-comp,sorting=none,sortcites=true]{biblatex}
 \addbibresource{MQP.bib}
+% The Zotero-exported Lin title contains a Unicode subscript four.
+\DeclareUnicodeCharacter{2084}{\textsubscript{4}}
+
+\usepackage{hyperref}
+\usepackage[nameinlink]{cleveref}
+\crefname{equation}{Eq.}{Eqs.}
+\Crefname{equation}{Equation}{Equations}
+\crefname{section}{Section}{Sections}
+\crefname{subsection}{Section}{Sections}
+\crefname{subsubsection}{Section}{Sections}
+\crefname{figure}{Fig.}{Figs.}
+\Crefname{figure}{Figure}{Figures}
+\crefname{table}{Table}{Tables}
+\Crefname{table}{Table}{Tables}
 
 \hypersetup{
   colorlinks  = true,
@@ -37,6 +53,7 @@
 
 \begin{document}
 
+\hypersetup{pageanchor=false}
 \begin{titlepage}
   \thispagestyle{empty}
   \begin{center}
@@ -76,10 +93,12 @@
 \end{titlepage}
 
 \pagenumbering{roman}
-\setcounter{page}{1}
+\hypersetup{pageanchor=true}
 
 \clearpage
 \section*{Abstract}
+\phantomsection
+\addcontentsline{toc}{section}{Abstract}
 \doublespacing
 \noindent
 Filler
@@ -87,6 +106,8 @@ Filler
 
 \clearpage
 \section*{Acknowledgements}
+\phantomsection
+\addcontentsline{toc}{section}{Acknowledgements}
 \doublespacing
 \noindent
 Filler
@@ -97,14 +118,17 @@ Filler
 \tableofcontents
 
 \clearpage
+\phantomsection
+\addcontentsline{toc}{section}{List of Figures}
 \listoffigures
+% Add a List of Tables here.
 
 \clearpage
 \pagenumbering{arabic}
-\setcounter{page}{1}
 \doublespacing
 
 \section{Introduction}
+\label{sec:introduction}
 \noindent
 Acronyms to introduce:
 \begin{itemize}
@@ -131,6 +155,7 @@ A mass distribution deflects light, the telescope records a blurred and noisy im
 
 \clearpage
 \singlespacing
+\phantomsection
 \printbibliography[heading=bibintoc,title={References}]
 
 \end{document}
