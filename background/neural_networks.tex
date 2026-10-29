@@ -1,0 +1,57 @@
+\subsection{Neural networks for image regression}
+\label{sec:learning}
+
+\subsubsection{Learning a function from examples}
+
+Instead of fitting a light profile to each observed galaxy, a neural network can learn a mapping from images to galaxy properties using examples with known targets. This is \emph{supervised learning}. In image regression, an input $\boldsymbol{x}$ contains pixel values and any additional information supplied to the model; the target $\boldsymbol{y}$ contains continuous quantities such as shape or flux. A neural network writes the prediction as $f_{\boldsymbol{w}}(\boldsymbol{x})$, with adjustable parameters $\boldsymbol{w}$. A typical layer forms
+\begin{equation}
+    \boldsymbol{z}^{(\ell+1)}=
+    \phi\!\left(W^{(\ell)}\boldsymbol{z}^{(\ell)}+\boldsymbol{b}^{(\ell)}\right),
+    \label{eq:network-layer}
+\end{equation}
+Here $W^{(\ell)}$ contains learned weights, $\boldsymbol{b}^{(\ell)}$ contains learned offsets, and $\boldsymbol{z}^{(\ell)}$ is an intermediate numerical representation, or feature vector. The activation $\phi$ applies a nonlinear function to its components. Without nonlinearities, a sequence of affine layers would collapse to a single affine map. The term \emph{deep} refers to composing multiple learned layers~\cite{goodfellow_deep_2016}.
+
+For galaxy-shape estimation, simulations supply the training examples and their targets. A simulator provides quantities that are unavailable for a real image: the unlensed profile, the applied shear, and the noise-free signal. GalSim implements profile transformations, PSF convolution, pixel rendering, and noise models for this purpose. These operations permit controlled tests in which one source of difficulty is changed at a time. They also define the population on which a learned estimator is trained~\cite{rowe_galsim_2015}.
+
+Training chooses the parameters by minimizing a loss. For $N$ examples and $K$ outputs, a weighted mean-squared error is
+\begin{equation}
+    L(\boldsymbol{w})=\frac{1}{NK}\sum_{a=1}^{N}\sum_{k=1}^{K}
+    \lambda_k\left[f_{\boldsymbol{w}}(\boldsymbol{x}_a)_k-y_{a,k}\right]^2,
+    \label{eq:mse}
+\end{equation}
+with output weights $\lambda_k$. Parameters are updated using gradients evaluated on smaller subsets, or mini-batches, rather than the whole training set at every step. AdamW, used in ShearNet's training code, scales updates using running gradient statistics and applies weight decay separately from the loss-gradient update. Weight decay gradually shrinks parameters to discourage excessively large weights. A trained model performs \emph{inference} by evaluating the resulting function on new inputs~\cite{goodfellow_deep_2016,loshchilov_decoupled_2019,field_shearnet_2026}.
+
+Training error is not an independent performance measurement. A validation set supports choices such as when to stop training; a test set evaluates the chosen model afterward. These roles matter in simulations: rotated copies or new noise realizations of a galaxy still share underlying structure. Keeping related realizations together when splitting data avoids treating nearly repeated examples as independent evidence of generalization~\cite{goodfellow_deep_2016,tewes_weak-lensing_2019}.
+
+\subsubsection{Convolution and attention}
+
+A fully connected layer assigns separate weights to every input--output connection. A convolutional neural network (CNN) instead reuses a small filter over the image. In the usual machine-learning convention, a two-dimensional convolutional layer computes
+\begin{equation}
+    z'_{u,v,o}=\phi\!\left(b_o+
+    \sum_{r,s,c}K_{r,s,c,o}\,z_{u+r,v+s,c}\right).
+    \label{eq:convolution}
+\end{equation}
+The indices $u,v$ locate a pixel, $r,s$ locate an offset within the filter, and $c,o$ label input and output feature channels. These channels are learned arrays, not necessarily photometric bands. Reusing $K$ lets the same local pattern be recognized at different locations, while successive layers combine information over larger regions. This learned filtering operation is distinct from convolution with the physical PSF~\cite{goodfellow_deep_2016}.
+
+Residual connections provide another way to organize deep networks. A block of the form $\boldsymbol{z}'=\boldsymbol{z}+F(\boldsymbol{z})$ learns a change to its input, retaining a direct path through the block. This helps optimize deeper models without requiring every layer to relearn a useful representation from scratch~\cite{he_deep_2016}.
+
+Attention combines features using weights that depend on the current input. Given arrays of query, key, and value vectors, denoted $Q$, $K$, and $V$, scaled dot-product attention is
+\begin{equation}
+    \operatorname{Attention}(Q,K,V)=
+    \operatorname{softmax}\!\left(\frac{QK^{\mathsf T}}{\sqrt{d_k}}\right)V.
+    \label{eq:attention}
+\end{equation}
+Here $d_k$ is the query/key dimension and the row-wise softmax converts scores $s_j$ into normalized weights $\exp(s_j)/\sum_l\exp(s_l)$. A query selects a weighted combination of values according to its similarity to the keys. In cross-attention, the queries and keys/values come from different inputs. ShearNet uses this construction to combine galaxy and PSF features. Multiple attention heads learn several such combinations; they are internal computations, not separate physical measurements~\cite{vaswani_attention_2017,field_shearnet_2026}.
+
+\subsubsection{Automatic differentiation}
+
+Training requires derivatives through all these operations. Automatic differentiation evaluates the chain rule through a numerical program, propagating derivatives forward or backward. Backpropagation uses reverse mode to obtain a scalar loss's gradient with respect to many network parameters. It does not require finite-difference perturbations of each parameter~\cite{baydin_automatic_2018}.
+
+The same machinery can differentiate with respect to physical inputs. If a simulator produces an image $\boldsymbol{x}(\boldsymbol{h})$ under an applied shear, then, at fixed network parameters,
+\begin{equation}
+    \frac{\partial f_i}{\partial h_j}
+    =\sum_p\frac{\partial f_i}{\partial x_p}
+              \frac{\partial x_p}{\partial h_j}.
+    \label{eq:differentiable-response}
+\end{equation}
+A Jacobian--vector product evaluates the network derivative along the image perturbation caused by that shear without storing the full pixel Jacobian. Differentiable image rendering thus permits a response calculation through both simulator and estimator. The derivative is accurate for the implemented model; it does not establish that the model describes an observed galaxy or that catalog selection has been calibrated~\cite{baydin_automatic_2018,field_shearnet_2026}.

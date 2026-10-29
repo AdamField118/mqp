@@ -1,0 +1,66 @@
+\subsection{Estimating and calibrating shear}
+\label{sec:calibration}
+
+\subsubsection{Shape measurements and their response}
+
+The image model in Eq.~\eqref{eq:image-model} gives one route from recorded pixels to galaxy shape: fit a parameterized light profile after convolving it with the PSF. For Gaussian pixel noise with a known, parameter-independent covariance $C$, the image likelihood has the form
+\begin{equation}
+    -2\ln\mathcal{L}(\boldsymbol{q})=
+    [\boldsymbol{d}-\boldsymbol{m}(\boldsymbol{q})]^{\mathsf T}
+    C^{-1}[\boldsymbol{d}-\boldsymbol{m}(\boldsymbol{q})]+\mathrm{constant},
+    \label{eq:likelihood}
+\end{equation}
+where $\boldsymbol{q}$ contains parameters such as position, flux, size, and ellipticity, and $\boldsymbol{m}$ is the predicted pixel vector. Priors can supply additional information in a Bayesian treatment. The \texttt{ngmix} package provides model-fitting tools used by the SuperBIT analysis. A fitted shape need not be an unbiased shear estimator: an imperfect profile family and the nonlinear effect of pixel noise can both change its expectation~\cite{sheldon_implementation_2014,refregier_noise_2012}.
+
+Whether a shape comes from profile fitting or another estimator, calibration measures how that statistic responds to lensing. For a small artificial shear $\boldsymbol{h}$, expand the measured shape as
+\begin{equation}
+    e_i(\boldsymbol{h})=e_i(\boldsymbol{0})
+    +\sum_{j=1}^{2}R_{ij}h_j+O(|\boldsymbol{h}|^2),
+    \qquad
+    R_{ij}=\left.\frac{\partial e_i}{\partial h_j}\right|_{\boldsymbol{h}=0}.
+    \label{eq:response}
+\end{equation}
+The diagonal terms describe sensitivity to each shear component; the off-diagonal terms describe mixing between them. Even an accurate individual shape measurement need not have the identity matrix as its response. Equation~\eqref{eq:ellipticity-transform}, for example, has a response that depends on the intrinsic shape. Calibration concerns the ensemble used for the science measurement~\cite{schneider_weak_2006,sheldon_practical_2017}.
+
+Metacalibration estimates this response by modifying the observed images. It removes an estimated PSF, applies small positive and negative shears, and reconvolves with a suitable kernel to suppress modes that deconvolution would make unstable. The shape estimator is then run again:
+\begin{equation}
+    R_{ij}\simeq
+    \frac{e_i(+\Delta h\,\boldsymbol{u}_j)-e_i(-\Delta h\,\boldsymbol{u}_j)}{2\Delta h},
+    \label{eq:metacal}
+\end{equation}
+where $\boldsymbol{u}_j$ is the unit vector in shear direction $j$. Shearing a blurred image without treating its PSF would shear the instrument's imprint as well as the galaxy. Image manipulation also produces correlated noise, whose contribution to the response must be controlled~\cite{huff_metacalibration_2017,sheldon_practical_2017}.
+
+\subsubsection{Selection, weights, and residual bias}
+
+The response of a catalog includes more than the response of the galaxies already in it. A small shear can move an object across a detection threshold or a cut on signal-to-noise ratio or size. If inclusion depends on orientation, an initially isotropic population can acquire a nonzero mean shape. A selection response measures this effect by averaging shapes from images with no artificial shear, while determining membership from the positively and negatively sheared versions. With equal weights, its components are~\cite{sheldon_practical_2017}
+\begin{equation}
+    R^{\mathrm{sel}}_{ij}\simeq
+    \frac{\langle e_i(0)\rangle_{S_j^+}-\langle e_i(0)\rangle_{S_j^-}}{2\Delta h}.
+    \label{eq:selection-response}
+\end{equation}
+The corresponding total response is $\langle R\rangle+R^{\mathrm{sel}}$. Weights that depend on measured quantities also affect the response. More generally, the object to differentiate is the complete selected, weighted mean,
+\begin{equation}
+    \overline{\boldsymbol{e}}(\boldsymbol{h})=
+    \frac{\sum_a S_a(\boldsymbol{h})w_a(\boldsymbol{h})\boldsymbol{e}_a(\boldsymbol{h})}
+    {\sum_a S_a(\boldsymbol{h})w_a(\boldsymbol{h})},
+    \qquad
+    R_{\mathrm{tot}}=\left.\frac{\partial\overline{\boldsymbol{e}}}{\partial\boldsymbol{h}}\right|_0.
+    \label{eq:weighted-response}
+\end{equation}
+Here $S_a$ indicates inclusion and $w_a$ is the weight of object $a$. For hard cuts, this derivative is understood statistically through perturbed sample averages. Under a locally constant weak shear and a controlled mean additive offset $\boldsymbol{c}_e$, the calibrated estimate is
+\begin{equation}
+    \widehat{\boldsymbol{g}}\simeq
+    R_{\mathrm{tot}}^{-1}(\overline{\boldsymbol{e}}-\boldsymbol{c}_e).
+    \label{eq:calibrated-shear}
+\end{equation}
+The same selections and weight definitions must enter the calibration and the final measurement. Reselecting an existing catalog does not capture objects whose detection or deblending changes under shear; those effects require a treatment that includes the detection process, or validation through simulations of the full measurement procedure~\cite{sheldon_practical_2017}.
+
+Independent simulations with known input shear test the remaining error. A component-wise summary, when cross-component terms are negligible or tested separately, is
+\begin{equation}
+    \langle\widehat g_i\rangle-g_i^{\mathrm{true}}
+    =m_i g_i^{\mathrm{true}}+c_i.
+    \label{eq:shear-bias}
+\end{equation}
+The multiplicative bias $m_i$ rescales the signal, while the additive bias $c_i$ shifts it. These are residual biases of the calibrated estimator, not the raw response in Eq.~\eqref{eq:response}. Noise can produce a bias as well as scatter, so increasing the sample size does not remove every measurement error~\cite{refregier_noise_2012,mandelbaum_weak_2018}.
+
+PSF leakage is a related diagnostic. One can test whether mean measured galaxy shapes vary with PSF ellipticity, and whether PSF-model residuals correlate across angular separations. Such correlations reveal different failure modes: a shape estimator may retain the imprint of a known anisotropic PSF, or an incorrect PSF model may supply the wrong correction. A flat trend in one diagnostic does not establish that all other biases vanish~\cite{rowe_improving_2010,saha_lensing_2026-1}.

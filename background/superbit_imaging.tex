@@ -1,0 +1,16 @@
+\subsection{From lensed light to SuperBIT images}
+\label{sec:images}
+
+SuperBIT observed 30 galaxy clusters during its 2023 science flight, operating at an altitude of approximately $33\,\mathrm{km}$. Its observations exploit the low blue-wavelength sky background and high angular resolution available in the stratosphere. LITB~I established the advantage of blue-band lensing observations for this environment. LITB~III subsequently used the flight images to construct shape catalogs, with source detection in F480W ($b$) and complementary photometry in F400W ($u$) and F600W ($g$)~\cite{shaaban_weak_2022,saha_lensing_2026-1}.
+
+Recovering the mean shape described above requires accounting for how the telescope records each galaxy. The point-spread function (PSF) is the image the instrument would form of an unresolved point source. It describes the blurring of the ideal lensed surface brightness $I_{\mathrm{L}}$. Locally, a useful image model is~\cite{rowe_galsim_2015,mandelbaum_weak_2018}
+\begin{equation}
+    d_p=\int_{\Omega_p}\!d^2\theta\,
+    [P*I_{\mathrm{L}}](\boldsymbol{\theta})+n_p,
+    \label{eq:image-model}
+\end{equation}
+where $d_p$ is the background-subtracted signal in pixel $p$, $\Omega_p$ is that pixel's angular footprint, $P$ is the normalized PSF, and $n_p$ contains noise and residual background error. The convolution assumes the PSF is approximately constant across the individual galaxy. Across the field, or between exposures, it generally changes. If a supplied PSF model already includes the pixel response, that response must not be applied a second time~\cite{rowe_galsim_2015,mandelbaum_weak_2018}.
+
+The width of the PSF obscures small-scale galaxy structure; its anisotropy can also imitate a coherent galaxy elongation. Stars provide samples of the PSF at discrete positions. A spatial model interpolates between them to predict the PSF at each galaxy, and stars withheld from fitting can test those predictions. A small mean residual alone is insufficient: errors correlated across the field can contaminate the spatially coherent lensing signal~\cite{rowe_improving_2010}.
+
+Image processing also affects the inference. A coadd combines aligned exposures, increasing depth but mixing their PSFs and noise properties. Interpolation can correlate neighboring pixel errors. Blending occurs when light from neighboring sources overlaps; assigning those pixels to separate objects is the deblending problem. LITB~III uses coadds for detection and photometry while retaining individual-exposure information for shape fitting. Whichever images enter the shape measurement, their PSF and noise properties must be represented in the inference~\cite{saha_lensing_2026-1,rowe_galsim_2015}.

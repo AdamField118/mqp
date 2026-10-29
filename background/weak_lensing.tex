@@ -1,0 +1,66 @@
+\subsection{Weak gravitational lensing}
+\label{sec:lensing}
+
+\subsubsection{The lens mapping}
+
+For a galaxy cluster, the thin-lens approximation places the deflecting mass on a plane perpendicular to the line of sight. This is appropriate when the cluster's depth is small compared with the observer--lens and lens--source distances. Let $\boldsymbol{\theta}$ be the angular position of an observed image and $\boldsymbol{\beta}$ the position its source would have without the lens. In terms of the dimensionless projected lensing potential $\psi$, the lens equation is~\cite{bartelmann_weak_2001}
+\begin{equation}
+    \boldsymbol{\beta}=\boldsymbol{\theta}-\boldsymbol{\nabla}_{\theta}\psi(\boldsymbol{\theta}).
+    \label{eq:lens-equation}
+\end{equation}
+For a fixed source redshift, this potential obeys
+\begin{equation}
+    \nabla_{\theta}^{2}\psi=2\kappa,
+    \qquad
+    \kappa(\boldsymbol{\theta})=\frac{\Sigma(D_l\boldsymbol{\theta})}{\Sigma_{\mathrm{crit}}},
+    \qquad
+    \Sigma_{\mathrm{crit}}=\frac{c^2}{4\pi G}\frac{D_s}{D_lD_{ls}}.
+    \label{eq:convergence}
+\end{equation}
+Here $\Sigma$ is the projected mass per unit physical area, while $D_l$, $D_s$, and $D_{ls}$ are angular-diameter distances from observer to lens, observer to source, and lens to source. An angular-diameter distance converts an observed angular extent into a transverse physical size. The source must lie behind the lens. The convergence $\kappa$ therefore depends on both the mass distribution and the source distance; it is not a surface density in physical units~\cite{bartelmann_weak_2001}.
+
+Across a sufficiently small galaxy image, the lens mapping can be linearized. Its Jacobian separates into an isotropic part and a traceless distortion:
+\begin{equation}
+    A_{ij}=\frac{\partial\beta_i}{\partial\theta_j}
+    =\begin{pmatrix}
+        1-\kappa-\gamma_1 & -\gamma_2\\
+        -\gamma_2 & 1-\kappa+\gamma_1
+    \end{pmatrix},
+    \label{eq:jacobian}
+\end{equation}
+where
+\begin{equation}
+    \kappa=\frac{\psi_{,11}+\psi_{,22}}{2},
+    \qquad
+    \gamma_1=\frac{\psi_{,11}-\psi_{,22}}{2},
+    \qquad
+    \gamma_2=\psi_{,12}.
+    \label{eq:potential-derivatives}
+\end{equation}
+Commas denote derivatives with respect to angular coordinates. Convergence changes the isotropic scale of the image, while the two shear components describe stretching along different axes. Lensing conserves surface brightness; the magnification $\mu=1/|\det A|$ changes the apparent area and hence the total flux~\cite{bartelmann_weak_2001,schneider_weak_2006}.
+
+Galaxy shapes constrain the \emph{reduced shear},
+\begin{equation}
+    g=g_1+ig_2=\frac{\gamma_1+i\gamma_2}{1-\kappa},
+    \label{eq:reduced-shear}
+\end{equation}
+rather than $\gamma$ alone. In the weak limit, $|\kappa|,|\gamma|\ll1$, one may use $g\simeq\gamma$. This approximation needs particular care near cluster cores, where a field can contain strong-lensing features even when the surrounding region is suitable for weak-lensing analysis~\cite{schneider_weak_2006}.
+
+\subsubsection{Ellipticity and shape noise}
+
+For an ideal image with elliptical isophotes (contours of equal surface brightness), define the complex ellipticity by
+\begin{equation}
+    \epsilon=\epsilon_1+i\epsilon_2
+    =\frac{a-b}{a+b}\exp(2i\varphi),
+    \label{eq:ellipticity}
+\end{equation}
+where $a$ and $b$ are the major and minor semiaxes and $\varphi$ is the major-axis angle. The factor of two expresses a physical symmetry: rotating an ellipse by $180^\circ$ leaves its shape unchanged. Ellipticity and shear are consequently called spin-2 quantities. For an active rotation of the image through an angle $\alpha$ in fixed coordinates, $\epsilon$ transforms as $\epsilon\exp(2i\alpha)$~\cite{schneider_weak_2006}.
+
+Several shape conventions appear in lensing software. In particular, the distortion $\chi=[(a^2-b^2)/(a^2+b^2)]\exp(2i\varphi)$ satisfies $\chi=2\epsilon/(1+|\epsilon|^2)$ and has a different shear response. The convention must therefore be specified before comparing outputs from different estimators. Here $\epsilon$ denotes the ideal ellipticity in Eq.~\eqref{eq:ellipticity}, before instrumental blurring, and $\boldsymbol{e}$ will denote a measured two-component shape statistic that still requires calibration~\cite{schneider_weak_2006}.
+
+If $\epsilon^{\mathrm{s}}$ is the unlensed ellipticity, the ideal transformation for $|g|<1$ is
+\begin{equation}
+    \epsilon=\frac{\epsilon^{\mathrm{s}}+g}{1+g^*\epsilon^{\mathrm{s}}},
+    \label{eq:ellipticity-transform}
+\end{equation}
+with $g^*$ the complex conjugate. Averaging over an isotropic distribution of intrinsic orientations gives $\langle\epsilon\rangle=g$. The intrinsic ellipticity of any particular galaxy is unknown, however, so its observed elongation cannot be assigned entirely to the lens. The resulting scatter is \emph{shape noise}. For $N$ independent galaxies sharing approximately the same shear, an ideal unweighted mean has per-component uncertainty $\sigma_{\epsilon,i}/\sqrt{N}$. Measurement noise, selection, and intrinsic alignments (correlations in unlensed galaxy orientations) complicate this ideal result~\cite{schneider_weak_2006,mandelbaum_weak_2018}.
